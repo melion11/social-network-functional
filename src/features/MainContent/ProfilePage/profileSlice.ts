@@ -1,6 +1,7 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {PhotosType, profileApi, ProfileType} from '../../../api/social-network-api';
 import {RootState} from '../../../app/store/store';
+import {EditFormType} from './ProfileEdit/ProfileEdit';
 
 const initialState: InitialStateType = {
     profile: {
@@ -72,6 +73,23 @@ export const updatePhoto = createAsyncThunk('profile/updatePhoto',
         }
     })
 
+export const refreshProfile = createAsyncThunk('profile/refreshProfile',
+    async (data: EditFormType, {rejectWithValue, dispatch, getState}) => {
+    const state = getState() as RootState
+    const userId = state.auth.auth.id
+    try {
+        const response = await profileApi.refreshProfile(data)
+        if (response.data.resultCode === 0 && userId) {
+            dispatch(getProfile(userId))
+            return response.data.data
+        }
+
+    } catch (e: any) {
+        return rejectWithValue(e.message)
+    }
+})
+
+
 
 export const profileSlice = createSlice({
     name: 'profile',
@@ -105,17 +123,17 @@ export const profileSlice = createSlice({
             state.loading = false
             state.error = action.error.message ?? ''
         })
-        builder.addCase(updateStatus.pending, (state, action) => {
+        builder.addCase(updateStatus.pending, (state) => {
             state.loading = true
         })
-        builder.addCase(updateStatus.fulfilled, (state, action) => {
+        builder.addCase(updateStatus.fulfilled, (state) => {
             state.loading = false
         })
         builder.addCase(updateStatus.rejected, (state, action) => {
             state.loading = false
             state.error = action.error.message ?? ''
         })
-        builder.addCase(updatePhoto.pending, (state, action) => {
+        builder.addCase(updatePhoto.pending, (state) => {
             state.loading = true
         })
         builder.addCase(updatePhoto.fulfilled, (state, action: PayloadAction<PhotosType>)=> {
@@ -123,6 +141,17 @@ export const profileSlice = createSlice({
             state.loading = false
         })
         builder.addCase(updatePhoto.rejected, (state, action)=> {
+            state.loading = false
+            state.error = action.error.message ?? ''
+        })
+        builder.addCase(refreshProfile.pending, (state) => {
+            state.loading = true
+        })
+        builder.addCase(refreshProfile.fulfilled, (state,action)=> {
+            // state.profile = {...action.payload, photos: state.profile.photos}
+            state.loading = false
+        })
+        builder.addCase(refreshProfile.rejected, (state, action)=> {
             state.loading = false
             state.error = action.error.message ?? ''
         })

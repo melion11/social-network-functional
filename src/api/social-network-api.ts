@@ -1,5 +1,6 @@
 import axios, {AxiosResponse} from "axios";
 import {FormValues} from "../features/Login/Login";
+import {EditFormType} from '../features/MainContent/ProfilePage/ProfileEdit/ProfileEdit';
 
 
 const instance = axios.create({
@@ -82,6 +83,16 @@ export type ProfileType = {
     photos: PhotosType
 }
 
+// export type RefreshProfileType = {
+//     userId: number | null
+//     aboutMe: string,
+//     lookingForAJob: boolean
+//     lookingForAJobDescription: string
+//     fullName: string
+//     contacts: ContactsType
+// }
+
+
 export type ContactsType = {
     [key: string]: string;
 }
@@ -102,7 +113,11 @@ export const profileApi = {
         formData.append('image', photo)
         return instance.put<ResponseType<{photos: PhotosType}>>('profile/photo', formData,
             {headers: {"Content-Type": "multipart/form-data"}})
+    },
+    refreshProfile(data: EditFormType) {
+        return instance.put<ResponseType>('/profile', {...data})
     }
+
 }
 
 

@@ -5,7 +5,7 @@ import {Route, Routes} from "react-router-dom";
 import {Login} from "../features/Login/Login";
 import {Layout} from "../components/Layout/Layout";
 import {FriendsPage} from "../features/MainContent/FriendsPage/FriendsPage";
-import ProfilePage from "../features/MainContent/ProfilePage/ProfilePage";
+import {ProfilePage} from "../features/MainContent/ProfilePage/ProfilePage";
 import ConversationPage from "../features/MainContent/DialogsPage/DialogsPage";
 import {UsersPage} from "../features/MainContent/UsersPage/UsersPage";
 import {getInitializeApp} from "./appSlice";
