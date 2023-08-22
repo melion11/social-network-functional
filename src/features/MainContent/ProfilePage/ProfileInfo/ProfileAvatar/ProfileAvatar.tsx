@@ -20,7 +20,7 @@ export const ProfileAvatar = () => {
     return (
         <AvatarContainer>
             <Avatar src={photos.large ? photos.large : defaultAvatar} alt="Avatar"/>
-            {!userId && <HiddenInput accept="image/*" capture="user" onChange={updatePhotoHandler} type={'file'}/>}
+            {!userId && <HiddenInput onChange={updatePhotoHandler} type={'file'}/>}
         </AvatarContainer>
     );
 };
