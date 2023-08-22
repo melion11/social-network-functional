@@ -29,7 +29,7 @@ export const Header = () => {
 };
 
 const HeaderContainer = styled.header`
-  background-color: #707070;
+  background: linear-gradient(to bottom, #f38550, #414141);
   grid-area: header;
   display: flex;
   align-items: center;
@@ -38,12 +38,8 @@ const HeaderContainer = styled.header`
   padding: 0 20px;
   font-size: 1.5rem;
   font-weight: bold;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
   z-index: 500;
-
+  opacity: 0.8;
 
   @media (max-width: 768px) {
     height: 50px;
@@ -57,8 +53,8 @@ const LogoContainer = styled.div`
 `;
 
 const LogoImage = styled.img`
-  width: 300px;
-  height: 55px;
+  width: 90px;
+  height: 60px;
   margin-right: 10px;
 `;
 

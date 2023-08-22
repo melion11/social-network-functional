@@ -53,7 +53,9 @@ const Modal = styled.div`
   `;
 
 const ModalContent = styled.div`
-  padding: 20px;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
   border-radius: 12px;
   background-color: #4f4f4f;
   transition: 0.4s all;

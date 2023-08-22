@@ -13,6 +13,19 @@ const GlobalStyles = createGlobalStyle`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    overflow-x: hidden;
+  }
+  
+  body::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  body::-webkit-scrollbar-track {
+    background-color: #606060;
+  }
+
+  body::-webkit-scrollbar-thumb {
+    background-color: #c26604;
   }
 `;
 

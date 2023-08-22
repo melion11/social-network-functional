@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import {useAppSelector} from '../../../../app/hooks/hooks';
 import {Post} from './Post/Post';
+import TextField from "@mui/material/TextField";
 
 
 
@@ -9,6 +10,7 @@ import {Post} from './Post/Post';
 
 
 export const MyPosts = () => {
+
 
     const posts = useAppSelector(state => state.profilePage.posts)
 
@@ -38,21 +40,44 @@ const AddPostButtonWrapper = styled.div`
   margin-bottom: 10px;
 `;
 
-const PostInput = styled.input`
+const PostInput = styled(TextField)`
   flex-grow: 1;
-  padding: 10px;
+  padding: 20px;
   border-radius: 8px;
-  border: 1px solid #ddd;
   outline: none;
+  color: #858585;
+
+  //.MuiOutlinedInput-root {
+  //  &:hover fieldset {
+  //    border-color: #3a3a3a; /* Цвет границы при наведении */
+  //  }
+  .MuiOutlinedInput-root {
+    &.Mui-focused fieldset {
+      border-color: #bd5629; /* Цвет границы при фокусе */
+    }
+  }
+
+  .MuiFormLabel-root {
+    &.Mui-focused {
+      color: #bd5629; /* Цвет лейбла при фокусе */
+    }
+  }
+
+
 `;
 
 const AddButton = styled.button`
   padding: 10px 20px;
   border-radius: 8px;
-  background-color: #4c75a3;
+  background-color: #f38550;
   color: #fff;
   border: none;
   cursor: pointer;
+
+  &:hover {
+    background-color: #b45328;
+  }
+
 `;
 
 const PostListWrapper = styled.ul`

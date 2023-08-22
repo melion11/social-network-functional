@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import {useFormik} from 'formik';
-import {FormControl, FormGroup, FormLabel, Grid} from '@mui/material';
+import {FormControl, FormGroup, FormLabel} from '@mui/material';
 import {useAppDispatch, useAppSelector} from '../../app/hooks/hooks';
 import {Navigate} from 'react-router-dom';
 import {getLogin} from './authSlice';
@@ -64,8 +64,7 @@ export const Login = () => {
 
     return (
 
-        <Grid container justifyContent={'center'}>
-            <Grid item justifyContent={'center'}>
+
                 <FormControl>
                     <FormLabel style={{color: 'gray', textAlign: 'center'}}>
                         <p>To log in get registered
@@ -92,7 +91,7 @@ export const Login = () => {
                             />
                             {captchaImg &&
                                 <CaptchaContainer>
-                                    <img src={captchaImg}/>
+                                    <img alt={'captcha'} src={captchaImg}/>
                                     {formik.touched.captcha && formik.errors.captcha ?
                                         <div style={{color: 'red'}}>{formik.errors.captcha}</div> : null}
                                     <TextField {...formik.getFieldProps('captcha')}/>
@@ -109,8 +108,6 @@ export const Login = () => {
                         </FormGroup>
                     </form>
                 </FormControl>
-            </Grid>
-        </Grid>
     );
 }
 

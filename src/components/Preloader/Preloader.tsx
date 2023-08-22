@@ -5,7 +5,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 export const LinearIndeterminate = () => {
     return (
         <Box sx={{ width: '100%', position: 'relative'}}>
-            <LinearProgress sx={{ width: '100%', position: 'absolute'}} />
+            <LinearProgress color={"warning"} sx={{ width: '100%', position: 'absolute'}} />
         </Box>
     );
 }

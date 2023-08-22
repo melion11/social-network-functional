@@ -19,7 +19,9 @@ const initialState: InitialStateType = {
     status: '',
     posts: [
         {id: 1, title: 'newPost1'},
-        {id: 2, title: 'newPost2'}
+        {id: 2, title: 'newPost2'},
+        {id: 3, title: 'newPost3'},
+
     ],
     loading: false,
     error: ''
@@ -81,7 +83,7 @@ export const refreshProfile = createAsyncThunk('profile/refreshProfile',
         const response = await profileApi.refreshProfile(data)
         if (response.data.resultCode === 0 && userId) {
             dispatch(getProfile(userId))
-            return response.data.data
+            // return response.data.data
         }
 
     } catch (e: any) {
@@ -147,8 +149,7 @@ export const profileSlice = createSlice({
         builder.addCase(refreshProfile.pending, (state) => {
             state.loading = true
         })
-        builder.addCase(refreshProfile.fulfilled, (state,action)=> {
-            // state.profile = {...action.payload, photos: state.profile.photos}
+        builder.addCase(refreshProfile.fulfilled, (state)=> {
             state.loading = false
         })
         builder.addCase(refreshProfile.rejected, (state, action)=> {

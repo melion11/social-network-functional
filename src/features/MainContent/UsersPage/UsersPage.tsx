@@ -1,17 +1,16 @@
 import React, {useEffect} from 'react';
-import {getUsers, setSelectedPage} from "./usersSlice";
-import styled from "styled-components";
-import {User} from "./User/User";
-import {LinearIndeterminate} from "../../../components/Preloader/Preloader";
-import {PaginationControlled} from "../../../components/Pagination/PaginationControlled";
-import {useAppDispatch, useAppSelector} from "../../../app/hooks/hooks";
-import {Search} from "../../../components/Search/Search";
-import {useParams} from "react-router-dom";
+import {getUsers, setSelectedPage} from './usersSlice';
+import styled from 'styled-components';
+import {User} from './User/User';
+import {LinearIndeterminate} from '../../../components/Preloader/Preloader';
+import {PaginationControlled} from '../../../components/Pagination/PaginationControlled';
+import {useAppDispatch, useAppSelector} from '../../../app/hooks/hooks';
+import {Search} from '../../../components/Search/Search';
 
 
 export const UsersPage = () => {
 
-    const {error, users, loading, totalCount, currentPage, pageSize} = useAppSelector(state => state.usersPage)
+    const {users, loading, totalCount, currentPage, pageSize} = useAppSelector(state => state.usersPage)
     const dispatch = useAppDispatch()
 
 
@@ -30,14 +29,10 @@ export const UsersPage = () => {
         dispatch(getUsers({userName}))
     }
 
-    const param = useParams<'id'>()
-
-    console.log(param)
 
     const usersElements = users.map((user) => (
         <User key={user.id} id={user.id} photos={user.photos} name={user.name} status={user.status}
               followed={user.followed}/>
-
     ))
 
 

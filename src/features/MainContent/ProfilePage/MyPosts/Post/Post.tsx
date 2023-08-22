@@ -16,7 +16,8 @@ export const Post = ({title}: PostType) => {
 };
 
 const PostItem = styled.li`
-  background-color: #fff;
+  background-color: #3b3b3b;
+  color: #858585;
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 10px;

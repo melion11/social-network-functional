@@ -1,9 +1,9 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import styled from "styled-components";
 import {getFollowUser, getUnfollowUser} from "../usersSlice";
 import {useAppDispatch} from "../../../../app/hooks/hooks";
 import {PhotosType} from "../../../../api/social-network-api";
-import {Link, useParams} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 
 const defaultAvatar = 'https://yt3.ggpht.com/ytc/AKedOLRnZ1AD08TRJrPs9ZG39oKUsYb9C1ceoUvDNlAubw=s900-c-k-c0x00ffffff-no-rj'
@@ -37,7 +37,7 @@ export const User = ({id, photos, name, status, followed}: UserPageType) => {
                     <UserStatus>{status}</UserStatus>
                 </UserInfo>
             </LinkContainer>
-            <FollowButton followed={followed} onClick={() => (followed ? getUnFollowedHandler(id, false) : getFollowedHandler(id, true))}>
+            <FollowButton as="button" $followed={followed.toString()} onClick={() => (followed ? getUnFollowedHandler(id, false) : getFollowedHandler(id, true))}>
                 {followed ? 'Unfollow' : 'Follow'}
             </FollowButton>
         </CardContainer>
@@ -97,17 +97,17 @@ const UserStatus = styled.p`
   overflow-wrap: break-word;
 `;
 
-const FollowButton = styled.button<{ followed: boolean }>`
+const FollowButton = styled.button<{ $followed: string }>`
   padding: 8px 16px;
   border-radius: 8px;
-  background-color: ${(props) => (props.followed ? '#5d8ac0' : '#8c8b8b')};
+  background-color: ${(props) => (props.$followed ? '#5d8ac0' : '#8c8b8b')};
   color: #fff;
   border: none;
   cursor: pointer;
   margin-top: 16px;
 
   &:hover {
-    background-color: ${(props) => (props.followed ? '#355370' : '#525252')};
+    background-color: ${(props) => (props.$followed ? '#355370' : '#525252')};
   }
 `;
 

@@ -1,20 +1,32 @@
 import React from 'react';
 import {ProfileAvatar} from './ProfileAvatar/ProfileAvatar';
 import {ProfileStatus} from './ProfileStatus/ProfileStatus';
-import Checkbox from '@mui/material/Checkbox';
 import {MyPosts} from '../MyPosts/MyPosts';
 import styled from 'styled-components';
-import {ContactsType} from '../../../../api/social-network-api';
 import {useAppSelector} from '../../../../app/hooks/hooks';
 import {Link} from 'react-router-dom';
-
-
+import facebook from '../assets/socials/icons8-facebook-48.png'
+import website from '../assets/socials/icons8-website-48.png'
+import vk from '../assets/socials/icons8-vk-48.png'
+import twitter from '../assets/socials/icons8-twitter-48.png'
+import instagram from '../assets/socials/icons8-instagram-48.png'
+import youtube from '../assets/socials/icons8-youtube-48.png'
+import github from '../assets/socials/icons8-github-48.png'
+import mainLink from '../assets/socials/icons8-linkedin-48.png'
+import searchJob from '../assets/job/icons8-job-seeker-96.png'
+import haveJob from '../assets/job/icons8-work-96.png'
 
 type ProfileInfo = {
     setEditMode: (editMode: boolean) => void
+    isOwner: boolean
 }
 
-export const ProfileInfo = ({setEditMode}:ProfileInfo) => {
+
+const socialsIcons = [facebook, website, vk, twitter, instagram, youtube, github, mainLink]
+
+const lookingForAJobIcons = [searchJob, haveJob]
+
+export const ProfileInfo = ({setEditMode, isOwner}:ProfileInfo) => {
 
     const {fullName,aboutMe, lookingForAJob, lookingForAJobDescription} = useAppSelector(state => state.profilePage.profile)
     const contacts = useAppSelector(state => state.profilePage.profile.contacts)
@@ -25,13 +37,14 @@ export const ProfileInfo = ({setEditMode}:ProfileInfo) => {
     const contactsArray = keys.map((key, index) => ({
         title: key,
         url: values[index],
+        icons: socialsIcons[index]
     }));
 
     const contactsElements = contactsArray.map((link, index) => {
         return (
-            <div key={index}>
-                {!!link.url && <li><Link target="_blank" to={link.url}>{link.title}</Link></li>}
-            </div>
+            <React.Fragment key={index}>
+                {!!link.url && <Link target="_blank" to={link.url}><img src={link.icons} alt={`Contact ${index}`}/></Link>}
+            </React.Fragment>
         )
     })
 
@@ -46,10 +59,10 @@ export const ProfileInfo = ({setEditMode}:ProfileInfo) => {
 
                 <LookingForAJobContainer>
                     <SectionTitle>Looking for a job</SectionTitle>
-                    <Checkbox checked={lookingForAJob}/>
+                    <img alt={'job'} src={lookingForAJob ? lookingForAJobIcons[0] : lookingForAJobIcons[1]}/>
                 </LookingForAJobContainer>
 
-                <EditProfileButton onClick={()=> setEditMode(true)}>Edit Profile</EditProfileButton>
+                {isOwner && <EditProfileButton onClick={()=> setEditMode(true)}>Edit Profile</EditProfileButton> }
             </LeftSection>
 
             <RightSection>
@@ -72,12 +85,12 @@ export const ProfileInfo = ({setEditMode}:ProfileInfo) => {
                     </SectionContent>
                 </Section>
 
-                <Section>
+                <Contacts>
                     <SectionTitle>Contacts</SectionTitle>
-                    <SectionContent>
+                    <ContactsContent>
                         {contactsElements}
-                    </SectionContent>
-                </Section>
+                    </ContactsContent>
+                </Contacts>
 
                 <Section>
                     <SectionTitle>Posts</SectionTitle>
@@ -102,6 +115,13 @@ const EditProfileButton = styled.button`
   border: none;
   cursor: pointer;
   width: 100%;
+
+
+  &:hover {
+    background-color: #f38550;
+  }
+
+
 `;
 
 const RightSection = styled.div`
@@ -134,5 +154,20 @@ const SectionTitle = styled.h2`
 const SectionContent = styled.div`
   p {
     margin-bottom: 0.5rem;
+    color: #858585;
   }
+`;
+
+
+const Contacts = styled.div`
+  background-color: #343434;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+`;
+
+const ContactsContent = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 `;

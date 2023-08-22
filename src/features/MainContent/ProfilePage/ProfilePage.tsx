@@ -13,7 +13,6 @@ export const ProfilePage = () => {
 
     const [editMode, setEditMode] = useState(false)
 
-
     const dispatch = useAppDispatch()
     const authId = useAppSelector(state => state.auth.auth.id)
     const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
@@ -38,9 +37,8 @@ export const ProfilePage = () => {
         <>
             {loading && <LinearIndeterminate/>}
             <Container>
-                <ProfileInfo setEditMode={setEditMode}/>
+                <ProfileInfo isOwner={!userId} setEditMode={setEditMode}/>
                 <EditModal editMode={editMode} setEditMode={setEditMode}>
-                    <Title>Edit profile</Title>
                     <ProfileEdit setEditMode={setEditMode}/>
                 </EditModal>
             </Container>
@@ -58,9 +56,6 @@ const Container = styled.div`
   }
 `;
 
-const Title = styled.h2`
-  font-size: 20px;
-  text-align: center;
-`
+
 
 

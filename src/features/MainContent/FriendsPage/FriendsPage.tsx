@@ -29,9 +29,8 @@ export const FriendsPage = () => {
 
     const filteredFriends = friendsData.filter((friend) => filter.test(friend.name));
 
-
     const friendsElements = filteredFriends.map(friend => (
-            <User id={friend.id} photos={friend.photos} name={friend.name} status={friend.status} followed={friend.followed}/>
+            <User key={friend.id} id={friend.id} photos={friend.photos} name={friend.name} status={friend.status} followed={friend.followed}/>
         ))
 
     return (
