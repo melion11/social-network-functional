@@ -92,12 +92,12 @@ const NavItem = styled.div`
     transition: background-color 0.3s;
 
     &:hover {
-      background-color: #f38550;
+      background-color: #ff8f00;
     }
   }
 
   .active {
-    background: linear-gradient(to bottom, #f38550, #f38550);
+    background: linear-gradient(to bottom, #bd5629, #bd5629);
     font-weight: bold;
   }
 `;

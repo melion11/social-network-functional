@@ -8,6 +8,9 @@ import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import {FormControl, FormGroup} from '@mui/material';
 import {refreshProfile} from '../profileSlice';
+import Button from '@mui/material/Button';
+import ClearIcon from '@mui/icons-material/Clear';
+
 
 export type EditFormType = {
     lookingForAJob: boolean
@@ -26,7 +29,8 @@ export const ProfileEdit = ({setEditMode}: ProfileEditType) => {
     const dispatch = useAppDispatch()
 
 
-    const {fullName, lookingForAJob, lookingForAJobDescription, aboutMe
+    const {
+        fullName, lookingForAJob, lookingForAJobDescription, aboutMe
     } = useAppSelector(state => state.profilePage.profile)
 
     const contacts = useAppSelector(state => state.profilePage.profile.contacts)
@@ -59,30 +63,35 @@ export const ProfileEdit = ({setEditMode}: ProfileEditType) => {
     const contactsElements = Object.keys(contacts).map((contact: keyof ContactsType) => {
         return (
             <StyledTextField key={contact} {...formik.getFieldProps(`contacts.${contact}`)}
-                       label={contact} size={"small"} sx={{ width: { sm: 200, md: 300 }}}/>
+                             label={contact} size={'small'} sx={{width: {sm: 200, md: 300}}}/>
         )
     })
 
     return (
         <form onSubmit={formik.handleSubmit}>
             <FormControl>
-                <FormGroup>
-                    <Title>Edit profile</Title>
+                <FormGroup >
+                    <HeaderContainer>
+                        <HeaderTitle>Edit profile</HeaderTitle>
+                        <CloseButton fontSize={'large'} onClick={() => setEditMode(false)} />
+                    </HeaderContainer>
+
 
                     <AboutContainer>
-                    <StyledTextField variant="filled"  {...formik.getFieldProps('fullName')} label={'Full name'}/>
-                    <FormControlLabel label={'Looking for a job'}
-                                      control={<Checkbox  {...formik.getFieldProps('lookingForAJob')}
-                                      checked={formik.values.lookingForAJob}/>}
-                    />
-                    <StyledTextField {...formik.getFieldProps('aboutMe')}
-                               sx={{width: { sm: 200, md: '100%' },"& .MuiInputBase-root": {height: 80}}}
-                               multiline maxRows={3}
-                               label={'About me'}/>
-                    <StyledTextField  {...formik.getFieldProps('lookingForAJobDescription')}
-                               sx={{width: { sm: 200, md: '100%' },"& .MuiInputBase-root": {height: 80}}}
-                               multiline maxRows={3}
-                               label={'Looking for a job description'}/>
+                        <StyledTextField variant="filled"  {...formik.getFieldProps('fullName')} label={'Full name'}/>
+                        <FormControlLabel label={'Looking for a job'}
+                                          control={<Checkbox
+                                              color={'warning'}  {...formik.getFieldProps('lookingForAJob')}
+                                              checked={formik.values.lookingForAJob}/>}
+                        />
+                        <StyledTextField {...formik.getFieldProps('aboutMe')}
+                                         sx={{width: {sm: 200, md: '100%'}, '& .MuiInputBase-root': {height: 80}}}
+                                         multiline maxRows={3}
+                                         label={'About me'}/>
+                        <StyledTextField  {...formik.getFieldProps('lookingForAJobDescription')}
+                                          sx={{width: {sm: 200, md: '100%'}, '& .MuiInputBase-root': {height: 80}}}
+                                          multiline maxRows={3}
+                                          label={'Looking for a job description'}/>
                     </AboutContainer>
 
                     <ContactsSection>
@@ -100,6 +109,20 @@ export const ProfileEdit = ({setEditMode}: ProfileEditType) => {
     );
 };
 
+const HeaderContainer = styled.div`
+  position: relative;
+`;
+
+const HeaderTitle = styled.h1`
+  text-align: center;
+`;
+
+const CloseButton = styled(ClearIcon)`
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: -70px;
+`;
 
 const AboutContainer = styled.div`
   display: flex;
@@ -108,6 +131,7 @@ const AboutContainer = styled.div`
   gap: 25px;
 `
 const Title = styled.h2`
+  padding: 5px;
   font-size: 20px;
   text-align: center;
 `
@@ -126,32 +150,43 @@ const ContactsContainer = styled.div`
   margin-bottom: 20px;
 `
 
-const SaveProfileButton = styled.button`
+const SaveProfileButton = styled(Button)`
   padding: 15px;
   border-radius: 8px;
   background-color: #2f2f2f;
-  color: #fff;
-  border: none;
-  cursor: pointer;
+  color: #f38550;
   width: 100%;
   margin-bottom: 25px;
-  
+
   &:hover {
     background-color: #f38550;
+    color: white;
   }
-  
+
 `;
 
 const StyledTextField = styled(TextField)`
-  .MuiOutlinedInput-root {
-    &.Mui-focused fieldset {
-      border-color: #bd5629; /* Цвет границы при фокусе */
-    }
-  }
-
   .MuiFormLabel-root {
     &.Mui-focused {
       color: #bd5629; /* Цвет лейбла при фокусе */
+    }
+  }
+
+  .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #bd5629; /* Цвет рамки при фокусе */
+  }
+
+  .MuiOutlinedInput-root:hover:not(.Mui-focused) .MuiOutlinedInput-notchedOutline {
+    border-color: #ff8f00; /* Цвет рамки при наведении */
+  }
+
+  .MuiFilledInput-underline {
+    &:after {
+      border-bottom-color: #bd5629; /* Цвет нижней линии при фокусе */
+    }
+
+    &:hover:not(.Mui-disabled):before {
+      border-bottom-color: #ff8f00; /* Цвет нижней линии при наведении */
     }
   }
 `;

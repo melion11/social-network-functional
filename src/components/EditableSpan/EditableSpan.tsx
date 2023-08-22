@@ -32,7 +32,7 @@ export const EditableSpan = ({title, onChange}: EditableSpanType) => {
 
     return (
             editMode ?
-                <TextField hiddenLabel
+                <StyledTextField hiddenLabel
                            defaultValue="Normal"
                            variant="filled"
                            onChange={onChangeHandler}
@@ -55,4 +55,15 @@ const Status = styled.p`
   font-size: 20px;
   max-width: 280px;
   overflow-wrap: break-word;
+`;
+
+const StyledTextField = styled(TextField)`
+  .MuiFilledInput-underline {
+    &:after {
+      border-bottom-color: #bd5629; /* Цвет нижней линии при фокусе */
+    }
+    &:hover:not(.Mui-disabled):before {
+      border-bottom-color: #ff8f00; /* Цвет нижней линии при наведении */
+    }
+  }
 `;

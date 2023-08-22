@@ -5,11 +5,10 @@ import styled from 'styled-components';
 
 type EditModalType = {
     editMode: boolean
-    setEditMode: (active: boolean) => void
     children: React.ReactNode
 }
 
-export const EditModal = ({editMode, setEditMode, children}: EditModalType) => {
+export const EditModal = ({editMode, children}: EditModalType) => {
 
     useEffect(() => {
         if (editMode) {
@@ -19,11 +18,10 @@ export const EditModal = ({editMode, setEditMode, children}: EditModalType) => {
         }
     }, [editMode]);
 
-
-
+    console.log(editMode)
 
     return (
-        <Modal className={editMode ? 'active': ''} onClick={()=> setEditMode(false)}>
+        <Modal className={editMode ? 'active': ''}>
             <ModalContent className={editMode ? 'active': ''} onClick={(e)=> e.stopPropagation()}>
                 {children}
             </ModalContent>

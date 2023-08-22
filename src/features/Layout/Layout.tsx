@@ -4,6 +4,7 @@ import {Header} from '../Header/Header';
 import styled from 'styled-components';
 import {useAppSelector} from '../../app/hooks/hooks';
 import {Sidebar} from '../Sidebar/Sidebar';
+import {Login} from '../Login/Login';
 
 
 export const Layout = () => {
@@ -13,19 +14,40 @@ export const Layout = () => {
 
     return (
         <AppWrapper>
-            <GridContainer>
-                <Header/>
-                {
-                    isLoggedIn &&
-                        <Sidebar/>
-                }
-                <MainContentContainer>
-                    <Outlet/>
-                </MainContentContainer>
-            </GridContainer>
+            {isLoggedIn ?
+                <GridContainer>
+                    <Header/>
+                    <Sidebar/>
+                    <MainContentContainer>
+                        <Outlet/>
+                    </MainContentContainer>
+                </GridContainer>  :
+                <>
+                    <Header/>
+                    <LoginContainer>
+                        <Login/>
+                    </LoginContainer>
+                </>
+
+
+            }
         </AppWrapper>
+
+
     );
 };
+
+// <GridContainer>
+//     <Header/>
+//     {
+//         isLoggedIn &&
+//         <Sidebar/>
+//     }
+//     <MainContentContainer>
+//         <Outlet/>
+//     </MainContentContainer>
+// </GridContainer>
+
 
 const AppWrapper = styled.div`
   max-width: 100vw;
@@ -71,3 +93,11 @@ const MainContentContainer = styled.main`
     min-width: 100%;
   }
 `;
+
+const LoginContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+`

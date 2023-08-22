@@ -32,7 +32,6 @@ const validate = (values: FormValues) => {
         errors.password = 'Must be 8 characters or more';
     }
 
-
     return errors;
 };
 
@@ -65,54 +64,95 @@ export const Login = () => {
     return (
 
 
-                <FormControl>
-                    <FormLabel style={{color: 'gray', textAlign: 'center'}}>
-                        <p>To log in get registered
-                            <a href={'https://social-network.samuraijs.com/'}
-                               target={'_blank'}> here
-                            </a>
-                        </p>
-                        <p>or use common test account credentials:</p>
-                        <p>Email: free@samuraijs.com</p>
-                        <p>Password: free</p>
-                    </FormLabel>
+        <FormControl>
+            <FormLabel style={{color: 'gray', textAlign: 'center'}}>
+                <p>To log in get registered
+                    <Link href={'https://social-network.samuraijs.com/'}
+                       target={'_blank'}> here
+                    </Link>
+                </p>
+                <p>or use common test account credentials:</p>
+                <p>Email: free@samuraijs.com</p>
+                <p>Password: free</p>
+            </FormLabel>
 
-                    <form onSubmit={formik.handleSubmit}>
-                        <FormGroup>
-                            <TextField  {...formik.getFieldProps('email')} margin="normal"/>
-                            {formik.touched.email && formik.errors.email ?
-                                <div style={{color: 'red'}}>{formik.errors.email}</div> : null}
-                            <TextField type={'password'} {...formik.getFieldProps('password')} margin="normal"/>
-                            {formik.touched.password && formik.errors.password ?
-                                <div style={{color: 'red'}}>{formik.errors.password}</div> : null}
-                            <FormControlLabel label={'Remember me'} control={
-                                <Checkbox checked={formik.values.rememberMe}  {...formik.getFieldProps('rememberMe')}
-                                          color="primary"/>}
-                            />
-                            {captchaImg &&
-                                <CaptchaContainer>
-                                    <img alt={'captcha'} src={captchaImg}/>
-                                    {formik.touched.captcha && formik.errors.captcha ?
-                                        <div style={{color: 'red'}}>{formik.errors.captcha}</div> : null}
-                                    <TextField {...formik.getFieldProps('captcha')}/>
-                                </CaptchaContainer>
-                            }
+            <form onSubmit={formik.handleSubmit}>
+                <FormGroup>
+                    <StyledTextField label={'Email'}  {...formik.getFieldProps('email')} margin="normal"/>
+                    {formik.touched.email && formik.errors.email ?
+                        <div style={{color: '#ad3e3e'}}>{formik.errors.email}</div> : null}
+                    <StyledTextField label={'Password'} type={'password'} {...formik.getFieldProps('password')}
+                                     margin="normal"/>
+                    {formik.touched.password && formik.errors.password ?
+                        <div style={{color: '#ad3e3e'}}>{formik.errors.password}</div> : null}
+                    <FormControlLabel label={'Remember me'}
+                                      control={
+                                          <Checkbox
+                                              color={'warning'}
+                                              checked={formik.values.rememberMe}
+                                              {...formik.getFieldProps('rememberMe')}
+                                          />}
+                    />
+                    {captchaImg &&
+                        <CaptchaContainer>
+                            <img alt={'captcha'} src={captchaImg}/>
+                            {formik.touched.captcha && formik.errors.captcha ?
+                                <div style={{color: '#ad3e3e'}}>{formik.errors.captcha}</div> : null}
+                            <TextField {...formik.getFieldProps('captcha')}/>
+                        </CaptchaContainer>
+                    }
 
-                            <Button disabled={loading}
-                                    type="submit"
-                                    variant="contained"
-                                    sx={{mt: 5, mb: 2, }}
-                            >
-                                Sign In
-                            </Button>
-                        </FormGroup>
-                    </form>
-                </FormControl>
+                    <LoginButton disabled={loading}
+                                 type="submit"
+                                 variant="contained"
+                                 sx={{mt: 5, mb: 2,}}
+                    >
+                        Sign In
+                    </LoginButton>
+                </FormGroup>
+            </form>
+        </FormControl>
     );
 }
 
 const CaptchaContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`
+
+const LoginButton = styled(Button)`
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  background-color: #2f2f2f;
+  color: #f38550;
+  cursor: pointer;
+  width: 100%;
+
+  &:hover {
+    background-color: #f38550;
+    color: white;
+  }
+`;
+
+const StyledTextField = styled(TextField)`
+  .MuiFormLabel-root {
+    &.Mui-focused {
+      color: #bd5629; /* Цвет лейбла при фокусе */
+    }
+  }
+
+  .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #bd5629; /* Цвет рамки при фокусе */
+  }
+
+  .MuiOutlinedInput-root:hover:not(.Mui-focused) .MuiOutlinedInput-notchedOutline {
+    border-color: #ff8f00; /* Цвет рамки при наведении */
+  }
+  
+`;
+
+const Link = styled.a`
+  color: #bd5629;
+  text-decoration: none;
 `

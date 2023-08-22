@@ -22,19 +22,16 @@ export const Search = ({ placeholder, onChange }: SearchType) => {
 };
 
 const StyledTextField = styled(MuiTextField)`
-  .MuiOutlinedInput-root {
-    &:hover fieldset {
-      border-color: #3a3a3a; /* Цвет границы при наведении */
-    }
-
-    &.Mui-focused fieldset {
-      border-color: #3a3a3a; /* Цвет границы при фокусе */
+  .MuiFormLabel-root {
+    &.Mui-focused {
+      color: #bd5629; /* Цвет лейбла при фокусе */
     }
   }
 
-  .MuiFormLabel-root {
-    &.Mui-focused {
-      color: #252525; /* Цвет лейбла при фокусе */
-    }
+  .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #bd5629; /* Цвет рамки при фокусе */
+  }
+  .MuiOutlinedInput-root:hover:not(.Mui-focused) .MuiOutlinedInput-notchedOutline {
+    border-color: #ff8f00; /* Цвет рамки при наведении */
   }
 `;

@@ -35,3 +35,4 @@ const Status = styled.p`
   max-width: 280px;
   overflow-wrap: break-word;
 `;
+

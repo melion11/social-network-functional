@@ -38,7 +38,7 @@ export const ProfilePage = () => {
             {loading && <LinearIndeterminate/>}
             <Container>
                 <ProfileInfo isOwner={!userId} setEditMode={setEditMode}/>
-                <EditModal editMode={editMode} setEditMode={setEditMode}>
+                <EditModal editMode={editMode}>
                     <ProfileEdit setEditMode={setEditMode}/>
                 </EditModal>
             </Container>

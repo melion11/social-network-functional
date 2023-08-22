@@ -4,7 +4,7 @@ import {useAppDispatch, useAppSelector} from '../../../../../app/hooks/hooks';
 import {updatePhoto} from '../../profileSlice';
 import {useParams} from 'react-router-dom';
 
-const defaultAvatar = 'https://yt3.ggpht.com/ytc/AKedOLRnZ1AD08TRJrPs9ZG39oKUsYb9C1ceoUvDNlAubw=s900-c-k-c0x00ffffff-no-rj'
+const defaultAvatar = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsGj1gTQDfDDEITpWX28zr_fgkkOFJBTmqyg&usqp=CAU'
 
 export const ProfileAvatar = () => {
 
@@ -20,7 +20,7 @@ export const ProfileAvatar = () => {
     return (
         <AvatarContainer>
             <Avatar src={photos.large ? photos.large : defaultAvatar} alt="Avatar"/>
-            {!userId && <HiddenInput onChange={updatePhotoHandler} type={'file'}/>}
+            {!userId && <HiddenInput accept="image/*" capture="user" onChange={updatePhotoHandler} type={'file'}/>}
         </AvatarContainer>
     );
 };
@@ -32,9 +32,14 @@ const AvatarContainer = styled.div`
 
 const Avatar = styled.img`
   width: 100%;
-  height: 250px;
+  height: 100%;
   border-radius: 8px;
   object-fit: cover;
+  transition: opacity 0.3s;
+
+  ${AvatarContainer}:hover & {
+    opacity: 0.4;
+  }
 `;
 
 const HiddenInput = styled.input`

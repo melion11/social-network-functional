@@ -2,6 +2,7 @@ import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {PhotosType, profileApi, ProfileType} from '../../../api/social-network-api';
 import {RootState} from '../../../app/store/store';
 import {EditFormType} from './ProfileEdit/ProfileEdit';
+import {v1} from 'uuid';
 
 const initialState: InitialStateType = {
     profile: {
@@ -18,9 +19,9 @@ const initialState: InitialStateType = {
     },
     status: '',
     posts: [
-        {id: 1, title: 'newPost1'},
-        {id: 2, title: 'newPost2'},
-        {id: 3, title: 'newPost3'},
+        {id: '1', title: 'newPost1'},
+        {id: '2', title: 'newPost2'},
+        {id: '3', title: 'newPost3'},
 
     ],
     loading: false,
@@ -99,6 +100,9 @@ export const profileSlice = createSlice({
     reducers: {
         resetProfile: (state) =>{
             state.profile = initialState.profile
+        },
+        addPost: (state, action) => {
+            state.posts.unshift({id: v1(), title: action.payload})
         }
     },
     extraReducers: builder => {
@@ -161,14 +165,14 @@ export const profileSlice = createSlice({
 })
 
 
-export const {resetProfile} = profileSlice.actions
+export const {resetProfile, addPost} = profileSlice.actions
 
 export default profileSlice.reducer
 
 
 //types
 type PostType = {
-    id: number
+    id: string
     title: string
 }
 

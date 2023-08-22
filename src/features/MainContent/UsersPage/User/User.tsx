@@ -4,9 +4,10 @@ import {getFollowUser, getUnfollowUser} from "../usersSlice";
 import {useAppDispatch} from "../../../../app/hooks/hooks";
 import {PhotosType} from "../../../../api/social-network-api";
 import {Link} from "react-router-dom";
+import Button from '@mui/material/Button';
 
 
-const defaultAvatar = 'https://yt3.ggpht.com/ytc/AKedOLRnZ1AD08TRJrPs9ZG39oKUsYb9C1ceoUvDNlAubw=s900-c-k-c0x00ffffff-no-rj'
+const defaultAvatar = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsGj1gTQDfDDEITpWX28zr_fgkkOFJBTmqyg&usqp=CAU'
 
 type UserPageType = {
     id: number
@@ -97,17 +98,17 @@ const UserStatus = styled.p`
   overflow-wrap: break-word;
 `;
 
-const FollowButton = styled.button<{ $followed: string }>`
+const FollowButton = styled(Button)<{ $followed: string }>`
   padding: 8px 16px;
   border-radius: 8px;
-  background-color: ${(props) => (props.$followed ? '#5d8ac0' : '#8c8b8b')};
+  background-color: ${(props) => (props.$followed ? '#bd5629' : '#8c8b8b')};
   color: #fff;
   border: none;
   cursor: pointer;
   margin-top: 16px;
 
   &:hover {
-    background-color: ${(props) => (props.$followed ? '#355370' : '#525252')};
+    background-color: ${(props) => (props.$followed ? '#ff8f00' : '#525252')};
   }
 `;
 
