@@ -39,9 +39,9 @@ export const Messages = () => {
 
     const messagesElements = messages.map(message => {
         if (message.senderId === authId) {
-            return <UserMessage key={message.id} body={message.body} senderName={message.senderName}/>
+            return <UserMessage key={message.id} id={message.id} body={message.body} senderName={message.senderName}/>
         } else {
-            return <FriendMessage key={message.id} body={message.body} senderName={message.senderName}/>
+            return <FriendMessage key={message.id} id={message.id} body={message.body} senderName={message.senderName}/>
         }
     })
 

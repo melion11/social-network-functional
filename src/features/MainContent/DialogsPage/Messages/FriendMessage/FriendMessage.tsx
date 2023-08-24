@@ -1,6 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import {defaultAvatar} from "../../../UsersPage/User/User";
+import ClearIcon from '@mui/icons-material/Clear';
+import {useAppDispatch, useAppSelector} from '../../../../../app/hooks/hooks';
+import {deleteMessage} from '../../DialogsSlice';
+import {LinearIndeterminate} from '../../../../../components/Preloader/Preloader';
 
 
 type FriendMessageType = {
@@ -15,12 +19,19 @@ type FriendMessageType = {
 }
 
 
-export const FriendMessage = ({senderName, body}: FriendMessageType) => {
+export const FriendMessage = ({senderName, body, id}: FriendMessageType) => {
 
 
+    const dispatch = useAppDispatch()
+
+    const deleteMessageHandler = () => {
+        if (id) dispatch(deleteMessage(id))
+    }
 
     return (
         <MessageItem>
+
+            <ClearIcon onClick={deleteMessageHandler}/>
             <MessageContent>
                 <UserProfilePic src={defaultAvatar} alt="User Profile" />
                 <MessageBody>

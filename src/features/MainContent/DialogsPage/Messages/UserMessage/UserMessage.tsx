@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import {defaultAvatar} from "../../../UsersPage/User/User";
+import ClearIcon from '@mui/icons-material/Clear';
+import {useAppDispatch} from '../../../../../app/hooks/hooks';
+import {deleteMessage} from '../../DialogsSlice';
 
 
 type UserMessageType = {
@@ -15,9 +17,13 @@ type UserMessageType = {
 }
 
 
-export const UserMessage = ({senderName, body}: UserMessageType) => {
+export const UserMessage = ({senderName, body, id}: UserMessageType) => {
 
+    const dispatch = useAppDispatch()
 
+    const deleteMessageHandler = () => {
+        if (id) dispatch(deleteMessage(id))
+    }
 
     return (
         <MessageItem>
@@ -27,6 +33,7 @@ export const UserMessage = ({senderName, body}: UserMessageType) => {
                     <MessageText>{body}</MessageText>
                 </MessageBody>
             </MessageContent>
+            <ClearIcon onClick={deleteMessageHandler}/>
         </MessageItem>
     );
 };

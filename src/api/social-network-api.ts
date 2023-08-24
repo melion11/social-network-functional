@@ -150,5 +150,8 @@ export const dialogsApi = {
     },
     sendMessage(userId: number, body: string) {
         return instance.post<ResponseType<{message:MessageType}>>(`dialogs/${userId}/messages`, {body})
+    },
+    deleteMessage(messageId: string) {
+        return instance.delete(`dialogs/messages/${messageId}`)
     }
 }
