@@ -5,6 +5,7 @@ import appReducer from '../appSlice'
 import friendsReducer from '../../features/MainContent/FriendsPage/friendsSlice'
 import profileReducer from '../../features/MainContent/ProfilePage/profileSlice'
 import thunk from 'redux-thunk';
+import {dialogsReducer} from "../../features/MainContent/DialogsPage/DialogsSlice";
 
 
 const store = configureStore({
@@ -13,7 +14,8 @@ const store = configureStore({
         auth: authReducer,
         app: appReducer,
         friendsPage: friendsReducer,
-        profilePage: profileReducer
+        profilePage: profileReducer,
+        dialogsPage: dialogsReducer
     },
     middleware: getDefaultMiddleware => getDefaultMiddleware().prepend(thunk)
 })

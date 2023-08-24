@@ -18,8 +18,6 @@ export const EditModal = ({editMode, children}: EditModalType) => {
         }
     }, [editMode]);
 
-    console.log(editMode)
-
     return (
         <Modal className={editMode ? 'active': ''}>
             <ModalContent className={editMode ? 'active': ''} onClick={(e)=> e.stopPropagation()}>

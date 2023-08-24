@@ -3,11 +3,12 @@ import styled from "styled-components";
 import {getFollowUser, getUnfollowUser} from "../usersSlice";
 import {useAppDispatch} from "../../../../app/hooks/hooks";
 import {PhotosType} from "../../../../api/social-network-api";
-import {Link} from "react-router-dom";
+import {Link, NavLink, useNavigate} from "react-router-dom";
 import Button from '@mui/material/Button';
+import {getStartChatting} from "../../DialogsPage/DialogsSlice";
 
 
-const defaultAvatar = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsGj1gTQDfDDEITpWX28zr_fgkkOFJBTmqyg&usqp=CAU'
+export const defaultAvatar = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsGj1gTQDfDDEITpWX28zr_fgkkOFJBTmqyg&usqp=CAU'
 
 type UserPageType = {
     id: number
@@ -29,6 +30,10 @@ export const User = ({id, photos, name, status, followed}: UserPageType) => {
         dispatch(getUnfollowUser({userId, followed}))
     }
 
+    const getStartChattingHandler = (userId: number) => {
+        dispatch(getStartChatting(userId))
+    }
+
     return (
         <CardContainer>
             <LinkContainer to={`/profile/${id}`}>
@@ -41,6 +46,10 @@ export const User = ({id, photos, name, status, followed}: UserPageType) => {
             <FollowButton as="button" $followed={followed.toString()} onClick={() => (followed ? getUnFollowedHandler(id, false) : getFollowedHandler(id, true))}>
                 {followed ? 'Unfollow' : 'Follow'}
             </FollowButton>
+            <NavLink to={`/dialogs/${id}/messages`}>
+                <SendMessageButton onClick={() => getStartChattingHandler(id)}>Send Message</SendMessageButton>
+            </NavLink>
+
         </CardContainer>
     );
 };
@@ -113,3 +122,16 @@ const FollowButton = styled(Button)<{ $followed: string }>`
 `;
 
 
+const SendMessageButton = styled(Button)`
+  padding: 8px 16px;
+  border-radius: 8px;
+  background-color: #bd5629;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  margin-top: 16px;
+
+  &:hover {
+    background-color: #ff8f00;
+  }
+`;

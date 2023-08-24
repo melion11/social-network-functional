@@ -6,7 +6,7 @@ import {Login} from "../features/Login/Login";
 import {Layout} from "../features/Layout/Layout";
 import {FriendsPage} from "../features/MainContent/FriendsPage/FriendsPage";
 import {ProfilePage} from "../features/MainContent/ProfilePage/ProfilePage";
-import {ConversationPage} from "../features/MainContent/DialogsPage/DialogsPage";
+import {DialogsPage} from "../features/MainContent/DialogsPage/DialogsPage";
 import {UsersPage} from "../features/MainContent/UsersPage/UsersPage";
 import {getInitializeApp} from "./appSlice";
 
@@ -35,7 +35,7 @@ function App() {
             <Route path={'/'} element={<Layout/>}>
                 <Route index element={<ProfilePage/>}></Route>
                 <Route path={'/profile/:userId?'} element={<ProfilePage/>}></Route>
-                <Route path={'/dialogs'} element={<ConversationPage/>}></Route>
+                <Route path={'/dialogs/:userId?/messages?'} element={<DialogsPage/>}></Route>
                 <Route path={'/users'} element={<UsersPage/>}></Route>
                 <Route path={'/friends'} element={<FriendsPage/>}></Route>
                 <Route path={'*'} element={<div>Page not found 404</div>}></Route>

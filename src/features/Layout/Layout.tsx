@@ -37,18 +37,6 @@ export const Layout = () => {
     );
 };
 
-// <GridContainer>
-//     <Header/>
-//     {
-//         isLoggedIn &&
-//         <Sidebar/>
-//     }
-//     <MainContentContainer>
-//         <Outlet/>
-//     </MainContentContainer>
-// </GridContainer>
-
-
 const AppWrapper = styled.div`
   max-width: 100vw;
   min-height: 100vh;

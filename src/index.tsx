@@ -34,7 +34,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
     <Provider store={store}>
-        <BrowserRouter basename={process.env.PUBLIC_URL}>
+        <BrowserRouter>
             <GlobalStyles/>
             <App/>
         </BrowserRouter>

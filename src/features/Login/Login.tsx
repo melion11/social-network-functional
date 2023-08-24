@@ -28,8 +28,7 @@ const validate = (values: FormValues) => {
 
     if (!values.password) {
         errors.password = 'Required';
-    }
-    else if (values.password.length < 3) {
+    } else if (values.password.length < 4) {
         errors.password = 'Must be 4 characters or more';
     }
 

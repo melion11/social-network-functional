@@ -69,7 +69,6 @@ export const updatePhoto = createAsyncThunk('profile/updatePhoto',
     async (photo: File, {rejectWithValue})=> {
         try {
             const response = await profileApi.updatePhoto(photo)
-            console.log(response)
             return response.data.data.photos
         } catch (e: any) {
             return rejectWithValue(e.message)

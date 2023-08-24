@@ -1,5 +1,5 @@
-import axios, {AxiosResponse} from "axios";
-import {FormValues} from "../features/Login/Login";
+import axios from 'axios';
+import {FormValues} from '../features/Login/Login';
 import {EditFormType} from '../features/MainContent/ProfilePage/ProfileEdit/ProfileEdit';
 
 
@@ -83,16 +83,6 @@ export type ProfileType = {
     photos: PhotosType
 }
 
-// export type RefreshProfileType = {
-//     userId: number | null
-//     aboutMe: string,
-//     lookingForAJob: boolean
-//     lookingForAJobDescription: string
-//     fullName: string
-//     contacts: ContactsType
-// }
-
-
 export type ContactsType = {
     [key: string]: string;
 }
@@ -120,4 +110,45 @@ export const profileApi = {
 
 }
 
+//types
+export type DialogsType = {
+    hasNewMessages: boolean
+    id: number
+    lastDialogActivityDate: string
+    lastUserActivityDate: string
+    newMessagesCount: number
+    photos: PhotosType
+    userName: string
+}
 
+export type MessageType = {
+    addedAt: string
+    body: string
+    id: string
+    recipientId: number
+    senderId: number
+    senderName: string
+    translatedBody: null
+    viewed: boolean
+}
+
+export type MessagesType = {
+    error: null | string
+    items: MessageType[]
+    totalCount: number
+}
+
+export const dialogsApi = {
+    getDialogs() {
+        return instance.get<DialogsType[]>(`dialogs`)
+    },
+    getUserMessages(userId: number) {
+        return instance.get<MessagesType>(`dialogs/${userId}/messages`)
+    },
+    getStartChatting(userId: number) {
+        return instance.put<ResponseType>(`dialogs/${userId}`)
+    },
+    sendMessage(userId: number, body: string) {
+        return instance.post<ResponseType<{message:MessageType}>>(`dialogs/${userId}/messages`, {body})
+    }
+}

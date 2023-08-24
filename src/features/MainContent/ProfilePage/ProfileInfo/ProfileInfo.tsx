@@ -42,11 +42,7 @@ export const ProfileInfo = ({setEditMode, isOwner}:ProfileInfo) => {
                 <ProfileSection title={'About me'} section={aboutMe}/>
                 <ProfileSection title={'Looking for a job description'} section={lookingForAJobDescription}/>
                 <ProfileContacts/>
-                <Section>
-                    <SectionTitle>Posts</SectionTitle>
-                    <MyPosts/>
-                </Section>
-
+                <MyPosts/>
             </RightSection>
         </>
     );
@@ -74,13 +70,6 @@ const EditProfileButton = styled(Button)`
 const RightSection = styled.div`
   flex: 1 0 65%;
   padding: 1rem;
-`;
-
-const Section = styled.div`
-  background-color: #343434;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
 `;
 
 const LookingForAJobContainer = styled.div`

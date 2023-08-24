@@ -7,6 +7,7 @@ import {getProfile, getStatus} from './profileSlice';
 import {ProfileInfo} from './ProfileInfo/ProfileInfo';
 import {ProfileEdit} from './ProfileEdit/ProfileEdit';
 import {EditModal} from '../../../components/Modal/EditModal';
+import {profileApi} from "../../../api/social-network-api";
 
 
 export const ProfilePage = () => {
