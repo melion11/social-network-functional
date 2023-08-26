@@ -1,34 +1,31 @@
 import React, {useEffect} from 'react';
-import {useAppDispatch, useAppSelector} from "./hooks/hooks";
 import {CircularProgress} from "@mui/material";
 import {Route, Routes} from "react-router-dom";
 import {Login} from "../features/Login/Login";
-import {Layout} from "../features/Layout/Layout";
-import {FriendsPage} from "../features/MainContent/FriendsPage/FriendsPage";
-import {ProfilePage} from "../features/MainContent/ProfilePage/ProfilePage";
-import {DialogsPage} from "../features/MainContent/DialogsPage/DialogsPage";
-import {UsersPage} from "../features/MainContent/UsersPage/UsersPage";
-import {getInitializeApp} from "./appSlice";
+import {appThunks} from './appSlice';
+import {Layout} from '../common/components';
+import {FriendsPage} from '../features/FriendsPage/FriendsPage';
+import {ProfilePage} from '../features/ProfilePage/ProfilePage';
+import {DialogsPage} from '../features/DialogsPage/DialogsPage';
+import {UsersPage} from '../features/UsersPage/UsersPage';
+import {selectIsInitialized} from './selectors/app.selectors';
+import {useAppDispatch, useAppSelector} from '../common/hooks';
 
 
 function App() {
 
-    const isInitialized = useAppSelector(state => state.app.isInitializedApp)
-
-
+    const isInitialized = useAppSelector(selectIsInitialized)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        dispatch(getInitializeApp())
+        dispatch(appThunks.getInitializeApp())
     }, [])
-
 
     if (!isInitialized) {
         return <div style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>
             <CircularProgress/>
         </div>
     }
-
 
     return (
         <Routes>

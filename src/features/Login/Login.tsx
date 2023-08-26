@@ -4,10 +4,11 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import {useFormik} from 'formik';
 import {FormControl, FormGroup, FormLabel} from '@mui/material';
-import {useAppDispatch, useAppSelector} from '../../app/hooks/hooks';
 import {Navigate} from 'react-router-dom';
-import {getLogin} from './authSlice';
 import styled from 'styled-components';
+import {useAppDispatch, useAppSelector} from '../../common/hooks';
+import {selectCaptchaImg, selectIsLoggedIn, selectLoading} from './auth.selectors';
+import {authThunks} from './authSlice';
 
 
 export type FormValues = {
@@ -38,9 +39,9 @@ const validate = (values: FormValues) => {
 
 export const Login = () => {
 
-    const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
-    const loading = useAppSelector(state => state.auth.loading)
-    const captchaImg = useAppSelector(state => state.auth.auth.captcha)
+    const isLoggedIn = useAppSelector(selectIsLoggedIn)
+    const loading = useAppSelector(selectLoading)
+    const captchaImg = useAppSelector(selectCaptchaImg)
     const dispatch = useAppDispatch()
 
     const formik = useFormik({
@@ -52,7 +53,7 @@ export const Login = () => {
         },
         validate,
         onSubmit: (values: FormValues) => {
-            dispatch(getLogin(values));
+            dispatch(authThunks.getLogin(values));
             if (captchaImg) formik.resetForm()
         },
     });
@@ -62,8 +63,6 @@ export const Login = () => {
     }
 
     return (
-
-
         <FormControl>
             <FormLabel style={{color: 'gray', textAlign: 'center'}}>
                 <p>To log in get registered
@@ -102,7 +101,7 @@ export const Login = () => {
                         </CaptchaContainer>
                     }
 
-                    <LoginButton disabled={loading}
+                    <LoginButton disabled={loading === 'loading'}
                                  type="submit"
                                  variant="contained"
                                  sx={{mt: 5, mb: 2,}}

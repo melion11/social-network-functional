@@ -1,14 +1,15 @@
 import {configureStore} from "@reduxjs/toolkit";
-import usersReducer from '../../features/MainContent/UsersPage/usersSlice'
-import authReducer from '../../features/Login/authSlice'
-import appReducer from '../appSlice'
-import friendsReducer from '../../features/MainContent/FriendsPage/friendsSlice'
-import profileReducer from '../../features/MainContent/ProfilePage/profileSlice'
 import thunk from 'redux-thunk';
-import {dialogsReducer} from "../../features/MainContent/DialogsPage/DialogsSlice";
+import {dialogsReducer} from '../../features/DialogsPage/dialogsSlice';
+import {appReducer} from '../appSlice';
+import {authReducer} from '../../features/Login/authSlice';
+import {usersReducer} from '../../features/UsersPage/usersSlice';
+import {friendsReducer} from '../../features/FriendsPage/friendsSlice';
+import {profileReducer} from '../../features/ProfilePage/profileSlice';
 
 
-const store = configureStore({
+
+export const store = configureStore({
     reducer: {
         usersPage: usersReducer,
         auth: authReducer,
@@ -26,4 +27,3 @@ export type AppDispatch = typeof store.dispatch
 
 
 
-export default store

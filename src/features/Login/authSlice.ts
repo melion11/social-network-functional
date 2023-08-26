@@ -1,7 +1,10 @@
-import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {authApi} from '../../api/social-network-api';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {FormValues} from './Login';
-import {getProfile, resetProfile} from '../MainContent/ProfilePage/profileSlice';
+import {authApi} from './auth.api';
+import {createAppAsyncThunk, handleServerAppError, handleServerNetworkError} from '../../common/utils';
+import {profileActions} from '../ProfilePage/profileSlice';
+import {ResultCode} from '../../common/enums';
+import {RequestStatusType} from '../../app/appSlice';
 
 
 const initialState: InitialStateType = {
@@ -12,58 +15,62 @@ const initialState: InitialStateType = {
         captcha: ''
     },
     isLoggedIn: false,
-    loading: false,
-    error: ''
+    requestStatus: "idle",
+    error: null
 }
 
-export const getLogout = createAsyncThunk('auth/getLogout',
+const getLogout = createAppAsyncThunk('auth/getLogout',
     async (_, {rejectWithValue, dispatch}) => {
         try {
             const response = await authApi.getLogout();
-            if (response.data.resultCode === 0) {
-                dispatch(setIsLoggedIn(false))
-                dispatch(resetProfile())
+            if (response.data.resultCode === ResultCode.Success) {
+                dispatch(authActions.setIsLoggedIn(false))
+                dispatch(profileActions.resetProfile())
+            } else {
+                handleServerAppError(response.data, dispatch)
             }
 
-        } catch (e: any) {
-            return rejectWithValue(e.message);
+        } catch (e) {
+            handleServerNetworkError(e, dispatch)
         }
     }
 );
 
-export const getAuth = createAsyncThunk('auth/getAuth',
+const getAuth = createAppAsyncThunk('auth/getAuth',
     async (_, {rejectWithValue, dispatch}) => {
         try {
             const response = await authApi.me()
-            if (response.data.resultCode === 0) {
+            if (response.data.resultCode === ResultCode.Success) {
                 return response.data.data
+            } else {
+                handleServerAppError(response.data, dispatch)
             }
-        } catch (e: any) {
-            return rejectWithValue(e.message);
+        } catch (e) {
+            handleServerNetworkError(e, dispatch)
         }
     })
 
-export const getLogin = createAsyncThunk<void, FormValues, { rejectValue: string }>('auth/getLogin',
+const getLogin = createAppAsyncThunk<void, FormValues, { rejectValue: string }>('auth/getLogin',
     async (data: FormValues, {rejectWithValue, dispatch}) => {
         try {
             const response = await authApi.getLogin(data);
-            if (response.data.resultCode === 0) {
+            if (response.data.resultCode === ResultCode.Success) {
                 dispatch(getAuth())
-                dispatch(setIsLoggedIn(true))
+                dispatch(authActions.setIsLoggedIn(true))
             } else {
-                if (response.data.resultCode === 10) {
+                if (response.data.resultCode === ResultCode.Captcha) {
                     dispatch(getCaptcha())
-                    dispatch(setIsLoggedIn(false))
+                    dispatch(authActions.setIsLoggedIn(false))
                 }
-
+                handleServerAppError(response.data, dispatch)
             }
-        } catch (e: any) {
-            return rejectWithValue(e.message);
+        } catch (e) {
+            handleServerNetworkError(e, dispatch)
         }
     }
 );
 
-export const getCaptcha = createAsyncThunk('auth/getCaptcha',
+const getCaptcha = createAppAsyncThunk('auth/getCaptcha',
     async (_, {rejectWithValue}) => {
         try {
             const response = await authApi.getCaptcha()
@@ -84,58 +91,53 @@ const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(getLogin.pending, (state) => {
-            state.loading = true
+            state.requestStatus = 'loading'
         })
         builder.addCase(getLogin.fulfilled, (state) => {
-            state.loading = false
+            state.requestStatus = 'succeeded'
             state.error = ''
         })
-        builder.addCase(getLogin.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.error.message || '';
+        builder.addCase(getLogin.rejected, (state) => {
+            state.requestStatus = 'failed'
         })
         builder.addCase(getLogout.pending, (state) => {
-            state.loading = true
+            state.requestStatus = 'loading'
         })
         builder.addCase(getLogout.fulfilled, (state) => {
             state.auth = initialState.auth
-            state.loading = false
+            state.requestStatus = 'succeeded'
         })
-        builder.addCase(getLogout.rejected, (state, action) => {
-            state.error = action.error.message ?? ''
-            state.loading = false
+        builder.addCase(getLogout.rejected, (state) => {
+            state.requestStatus = 'failed'
         })
         builder.addCase(getAuth.pending, (state) => {
-            state.loading = true
+            state.requestStatus = 'loading'
         })
         builder.addCase(getAuth.fulfilled, (state, action) => {
             if (action.payload !== undefined) {
                 state.auth = action.payload
             }
-            state.loading = false
+            state.requestStatus = 'succeeded'
         })
-        builder.addCase(getAuth.rejected, (state, action) => {
-            state.error = action.error.message ?? ''
-            state.loading = false
+        builder.addCase(getAuth.rejected, (state) => {
+            state.requestStatus = 'failed'
         })
         builder.addCase(getCaptcha.pending, (state) => {
-            state.loading = true
+            state.requestStatus = 'loading'
         })
         builder.addCase(getCaptcha.fulfilled, (state, action: PayloadAction<{captcha: string}>) => {
             state.auth.captcha = action.payload.captcha
-            state.loading = false
+            state.requestStatus = 'succeeded'
         })
-        builder.addCase(getCaptcha.rejected, (state, action) => {
-            state.error = action.error.message ?? ''
-            state.loading = false
+        builder.addCase(getCaptcha.rejected, (state) => {
+            state.requestStatus = 'failed'
         })
     },
 })
 
-
-export const {setIsLoggedIn} = authSlice.actions
-
-export default authSlice.reducer
+export const authActions = authSlice.actions
+export const authThunks  = {getLogout, getAuth, getLogin, getCaptcha}
+export const authReducer = authSlice.reducer
 
 //types
 type AuthType = {
@@ -145,10 +147,9 @@ type AuthType = {
     captcha?: string
 }
 
-
 type InitialStateType = {
     auth: AuthType
     isLoggedIn: boolean
-    loading: boolean
-    error: string
+    requestStatus: RequestStatusType
+    error: string | null
 }

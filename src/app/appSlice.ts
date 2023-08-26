@@ -1,29 +1,33 @@
-import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {authApi} from "../api/social-network-api";
-import {getAuth, setIsLoggedIn} from "../features/Login/authSlice";
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {authActions, authThunks} from '../features/Login/authSlice';
+import {authApi} from '../features/Login/auth.api';
+import {ResultCode} from '../common/enums';
+import {handleServerNetworkError} from '../common/utils';
+import {AppDispatch, RootState} from './store/store';
 
 
-const initialState: InitialStateType = {
+const initialState = {
+    requestStatus: "idle" as RequestStatusType,
+    error: null as string | null,
     isInitializedApp: false,
-    loading: false,
-    error: ''
-}
+};
 
+export type AppInitialStateType = typeof initialState;
 
-
-
-export const getInitializeApp = createAsyncThunk('app/getInitializeApp',
-    async (_, {rejectWithValue, dispatch}) => {
+export const getInitializeApp = createAsyncThunk<void, void, {
+    state: RootState;
+    dispatch: AppDispatch;
+    rejectValue: null;
+}>('app/getInitializeApp',
+    async (_, { dispatch}) => {
         try {
             const response = await authApi.me()
-            if (response.data.resultCode === 0) {
-                dispatch(setIsLoggedIn(true))
-                dispatch(getAuth())
-            } else {
-                dispatch(setIsLoggedIn(false))
+            if (response.data.resultCode === ResultCode.Success) {
+                dispatch(authActions.setIsLoggedIn(true))
+                dispatch(authThunks.getAuth())
             }
-        } catch (e: any) {
-            return rejectWithValue(e.message)
+        } catch (e) {
+            handleServerNetworkError(e, dispatch)
         }
 
     })
@@ -32,35 +36,40 @@ export const getInitializeApp = createAsyncThunk('app/getInitializeApp',
 const appSlice = createSlice({
     name: 'app',
     initialState,
-    reducers: {},
+    reducers: {
+        setAppError: (state, action: PayloadAction<{ error: string | null }>) => {
+            state.error = action.payload.error;
+        },
+        setAppStatus: (state, action: PayloadAction<{ requestStatus: RequestStatusType }>) => {
+            state.requestStatus = action.payload.requestStatus;
+        },
+    },
     extraReducers: builder => {
         builder.addCase(getInitializeApp.pending, (state) => {
-            state.loading = true
+            state.requestStatus = 'loading'
         })
         builder.addCase(getInitializeApp.fulfilled, (state) => {
             state.isInitializedApp = true
-            state.loading = false
+            state.requestStatus = 'succeeded'
         })
-        builder.addCase(getInitializeApp.rejected, (state, action) => {
+        builder.addCase(getInitializeApp.rejected, (state) => {
             state.isInitializedApp = true
-            state.error = action.error.message ?? ''
-            state.loading = false
+            state.requestStatus = 'failed'
         })
     }
 })
 
 
-export const {} = appSlice.actions
-
-export default appSlice.reducer
+export const appActions = appSlice.actions
+export const appThunks = {getInitializeApp};
+export const appReducer = appSlice.reducer
 
 
 //types
+export type RequestStatusType = "idle" | "loading" | "succeeded" | "failed";
+// type InitialStateType = {
+//     isInitializedApp: boolean
+//     requestStatus: RequestStatusType
+//     error: string | null
+// }
 
-
-
-type InitialStateType = {
-    isInitializedApp: boolean
-    loading: boolean
-    error: string
-}
