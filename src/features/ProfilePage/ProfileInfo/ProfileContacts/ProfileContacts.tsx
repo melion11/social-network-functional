@@ -30,7 +30,11 @@ export const ProfileContacts = () => {
     const contactsElements = contactsArray.map((link, index) => {
         return (
             <React.Fragment key={index}>
-                {!!link.url && <Link target="_blank" to={link.url}><img src={link.icons} alt={`Contact ${index}`}/></Link>}
+                {!!link.url && (
+                    <Link target="_blank" to={link.url}>
+                        <ContactImage src={link.icons} alt={`Contact ${index}`} />
+                    </Link>
+                )}
             </React.Fragment>
         )
     })
@@ -62,4 +66,14 @@ const ContactsContent = styled.div`
   display: flex;
   gap: 15px;
   flex-wrap: wrap;
+`;
+
+const ContactImage = styled.img`
+  width: 44px;
+  height: 44px;
+  transition: filter 0.3s ease;
+
+  &:hover {
+    filter: brightness(60%); /* Затемнение иконки при наведении */
+  }
 `;

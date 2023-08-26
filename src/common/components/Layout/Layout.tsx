@@ -42,12 +42,7 @@ export const Layout = () => {
 };
 
 const AppWrapper = styled.div`
-  max-width: 100vw;
-  min-height: 100vh;
-  padding: 0 1rem 1rem 1rem;
   background: #3f3f3f;
-  margin: 0 auto;
-
 
   @media (max-width: 768px) {
     padding: 1rem;
@@ -55,6 +50,12 @@ const AppWrapper = styled.div`
 `;
 
 const GridContainer = styled.div`
+  padding: 20px;
+  max-width: 1380px;
+  margin: 0 auto;
+  grid-gap: 10px;
+  min-height: 100vh;
+
   display: grid;
   grid-template-rows: 4rem auto 1fr 45px; /* Изменено значение */
   grid-template-columns: 16rem auto;
@@ -64,6 +65,9 @@ const GridContainer = styled.div`
     'sidebar main-content';
   gap: 10px;
 
+  
+  
+  
 
   @media (max-width: 768px) {
     grid-template-rows: 3rem auto 1fr 45px; /* Изменено значение */
@@ -79,7 +83,7 @@ const GridContainer = styled.div`
 const MainContentContainer = styled.main`
   grid-area: main-content;
   border-radius: 15px;
-
+  padding: 20px;
 
   @media (max-width: 768px) {
     min-width: 100%;

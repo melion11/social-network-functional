@@ -4,7 +4,8 @@ import {profileApi, ProfileType} from './profilePage.api';
 import {RootState} from '../../app/store/store';
 import {PhotosType} from '../UsersPage/usersPage.api';
 import {v1} from 'uuid';
-import {createAppAsyncThunk} from '../../common/utils';
+import {createAppAsyncThunk, handleServerAppError, handleServerNetworkError} from '../../common/utils';
+import {ResultCode} from '../../common/enums';
 
 const initialState: InitialStateType = {
     profile: {
@@ -27,7 +28,7 @@ const initialState: InitialStateType = {
 
     ],
     loading: false,
-    error: ''
+    error: null
 }
 
 const getProfile = createAppAsyncThunk('profile/getProfile',
@@ -67,12 +68,19 @@ const updateStatus = createAppAsyncThunk('profile/updateStatus',
 )
 
 const updatePhoto = createAppAsyncThunk('profile/updatePhoto',
-    async (photo: File, {rejectWithValue})=> {
+    async (photo: File, {rejectWithValue, dispatch})=> {
         try {
             const response = await profileApi.updatePhoto(photo)
-            return response.data.data.photos
-        } catch (e: any) {
-            return rejectWithValue(e.message)
+            if (response.data.resultCode === ResultCode.Success) {
+                return response.data.data.photos
+            } else {
+                handleServerAppError(response.data, dispatch)
+                return rejectWithValue(null);
+            }
+
+        } catch (e) {
+            handleServerNetworkError(e, dispatch)
+            return rejectWithValue(null);
         }
     })
 
@@ -82,7 +90,7 @@ const refreshProfile = createAppAsyncThunk('profile/refreshProfile',
     const userId = state.auth.auth.id
     try {
         const response = await profileApi.refreshProfile(data)
-        if (response.data.resultCode === 0 && userId) {
+        if (response.data.resultCode === ResultCode.Success && userId) {
             dispatch(getProfile(userId))
         }
 
@@ -143,9 +151,8 @@ const slice = createSlice({
             state.profile.photos = action.payload
             state.loading = false
         })
-        builder.addCase(updatePhoto.rejected, (state, action)=> {
+        builder.addCase(updatePhoto.rejected, (state)=> {
             state.loading = false
-            state.error = action.error.message ?? ''
         })
         builder.addCase(refreshProfile.pending, (state) => {
             state.loading = true
@@ -178,6 +185,6 @@ type InitialStateType = {
     posts: PostType[]
     status: string
     loading: boolean
-    error: string
+    error: string | null
 }
 

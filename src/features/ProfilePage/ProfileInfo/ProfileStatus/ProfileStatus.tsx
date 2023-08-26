@@ -36,5 +36,18 @@ export const Status = styled.p`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  
+  font-weight: bold;
+  padding: 0.5rem;
+
+  border-radius: 4px;
+  cursor: pointer;
+  
+  
+  &:hover {
+      background-color: #ff8f00;
+      color: #3f3f3f;
+  }
+  
 `;
 

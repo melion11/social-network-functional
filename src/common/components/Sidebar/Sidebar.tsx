@@ -67,6 +67,19 @@ const SidebarContainer = styled.div`
   border-radius: 15px;
   grid-area: sidebar;
 
+  ::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: #606060;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #c26604;
+  }
+  
+  
   @media (max-width: 768px) {
     display: none;
   }

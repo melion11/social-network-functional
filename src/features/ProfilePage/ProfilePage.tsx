@@ -48,9 +48,10 @@ export const ProfilePage = () => {
 };
 
 const Container = styled.div`
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
   display: flex;
+  gap: 50px;
 
   @media (max-width: 800px) {
     flex-wrap: wrap;

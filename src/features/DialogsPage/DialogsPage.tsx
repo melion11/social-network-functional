@@ -31,4 +31,17 @@ const Container = styled.div`
   height: 100vh;
   width: 100%;
   overflow: hidden; /* Добавлено, чтобы предотвратить появление горизонтальной прокрутки */
+
+  ::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: #606060;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #c26604;
+  }
+  
 `;

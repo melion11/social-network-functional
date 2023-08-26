@@ -1,16 +1,16 @@
 import React from 'react';
-import styled from "styled-components";
-
-import logo from './assets/logo.png'
+import styled from 'styled-components';
+import logo from './assets/logo2.png'
 import {authThunks} from '../../../features/Login/authSlice';
 import {useAppDispatch, useAppSelector} from '../../hooks';
-import {selectIsLoggedIn} from '../../../features/Login/auth.selectors';
-
+import {selectIsLoggedIn, selectEmail} from '../../../features/Login/auth.selectors';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 export const Header = () => {
 
     const isLoggedIn = useAppSelector(selectIsLoggedIn)
-    const  dispatch = useAppDispatch()
+    const email = useAppSelector(selectEmail)
+    const dispatch = useAppDispatch()
 
     const logOutHandler = () => {
         dispatch(authThunks.getLogout())
@@ -20,19 +20,25 @@ export const Header = () => {
         <HeaderContainer>
 
             <LogoContainer>
-                <LogoImage src={logo} alt="Logo" />
+                <LogoImage src={logo} alt="Logo"/>
             </LogoContainer>
 
             <UserContainer>
-                {isLoggedIn && <LogoutButton onClick={logOutHandler}>Logout</LogoutButton>}
-           </UserContainer>
+                {isLoggedIn &&
+                    <LogOutContainer>
+                        {email}
+                        <LogoutButton fontSize={'large'} onClick={logOutHandler}/>
+                    </LogOutContainer>
+                }
+            </UserContainer>
 
         </HeaderContainer>
     );
 };
 
 const HeaderContainer = styled.header`
-  background: linear-gradient(to bottom, #f38550, #414141);
+  background: linear-gradient(to top, #f1c049, #f38550);
+  //background: linear-gradient(to top, #f38550, #414141);
   grid-area: header;
   display: flex;
   align-items: center;
@@ -43,6 +49,10 @@ const HeaderContainer = styled.header`
   font-weight: bold;
   z-index: 500;
   opacity: 0.8;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+
 
   @media (max-width: 768px) {
     height: 50px;
@@ -51,14 +61,17 @@ const HeaderContainer = styled.header`
 `;
 
 const LogoContainer = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
 `;
 
 const LogoImage = styled.img`
-  width: 90px;
+  width: 60px;
   height: 60px;
-  margin-right: 10px;
+  position: absolute;
+  top: -13px;
+  left: -65px;
 `;
 
 const UserContainer = styled.div`
@@ -66,12 +79,11 @@ const UserContainer = styled.div`
   align-items: center;
 `;
 
-const LogoutButton = styled.button`
+const LogoutButton = styled(LogoutIcon)`
   color: #fff;
-  background-color: #bd3e3e;
   border: none;
   padding: 8px 16px;
-  font-size: 1rem;
+  font-size: 2rem;
   border-radius: 4px;
   cursor: pointer;
 
@@ -79,3 +91,10 @@ const LogoutButton = styled.button`
     background-color: #a83232;
   }
 `;
+
+const LogOutContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+`
