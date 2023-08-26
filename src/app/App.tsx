@@ -3,13 +3,13 @@ import {CircularProgress} from "@mui/material";
 import {Route, Routes} from "react-router-dom";
 import {Login} from "../features/Login/Login";
 import {appThunks} from './appSlice';
-import {Layout} from '../common/components';
 import {FriendsPage} from '../features/FriendsPage/FriendsPage';
 import {ProfilePage} from '../features/ProfilePage/ProfilePage';
 import {DialogsPage} from '../features/DialogsPage/DialogsPage';
 import {UsersPage} from '../features/UsersPage/UsersPage';
 import {selectIsInitialized} from './selectors/app.selectors';
 import {useAppDispatch, useAppSelector} from '../common/hooks';
+import {Page404, Layout} from '../common/components';
 
 
 function App() {
@@ -35,7 +35,7 @@ function App() {
                 <Route path={'/dialogs/:userId?/messages?'} element={<DialogsPage/>}></Route>
                 <Route path={'/users'} element={<UsersPage/>}></Route>
                 <Route path={'/friends'} element={<FriendsPage/>}></Route>
-                <Route path={'*'} element={<div>Page not found 404</div>}></Route>
+                <Route path={'*'} element={<Page404/>}></Route>
                 <Route path={'/login'} element={<Login/>}></Route>
             </Route>
 

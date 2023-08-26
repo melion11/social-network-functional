@@ -1,6 +1,7 @@
 import React, {ChangeEvent, useState} from 'react';
 import styled from 'styled-components';
 import TextField from '@mui/material/TextField';
+import {Status} from '../../../features/ProfilePage/ProfileInfo/ProfileStatus/ProfileStatus';
 
 
 type EditableSpanType = {
@@ -45,17 +46,6 @@ export const EditableSpan = ({title, onChange}: EditableSpanType) => {
             <Status onDoubleClick={()=> setEditMode(true)}>{title ? title : 'Click to add your status'}</Status>
     );
 };
-
-
-
-const Status = styled.p`
-  display: block;
-  color: #858585;
-  margin: 0 0 20px 0;
-  font-size: 20px;
-  max-width: 280px;
-  overflow-wrap: break-word;
-`;
 
 const StyledTextField = styled(TextField)`
   .MuiFilledInput-underline {

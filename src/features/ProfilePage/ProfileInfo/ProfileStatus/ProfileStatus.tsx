@@ -26,12 +26,15 @@ export const ProfileStatus = () => {
     );
 };
 
-const Status = styled.p`
+export const Status = styled.p`
   display: block;
   margin: 0 0 20px 0;
   font-size: 20px;
   color: #666;
   max-width: 280px;
   overflow-wrap: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 

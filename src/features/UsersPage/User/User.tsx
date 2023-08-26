@@ -39,7 +39,7 @@ export const User = ({id, photos, name, status, followed}: UserPageType) => {
                 <Avatar src={photos.small ? photos.small : defaultAvatar} alt="User Avatar" />
                 <UserInfo>
                     <UserName>{name}</UserName>
-                    <UserStatus>{status}</UserStatus>
+                    {status && <UserStatus>{status}</UserStatus>}
                 </UserInfo>
             </LinkContainer>
             <FollowButton as="button" $followed={followed.toString()}
@@ -57,6 +57,7 @@ export const User = ({id, photos, name, status, followed}: UserPageType) => {
 };
 
 const CardContainer = styled.div`
+  position: relative; /* Добавляем относительное позиционирование */
   width: 100%;
   max-width: 200px;
   border-radius: 8px;
@@ -73,6 +74,7 @@ const CardContainer = styled.div`
 
   &:hover {
     transform: translateY(-2px);
+    filter: brightness(80%); /* Затемнение карточки при наведении */
   }
 `;
 
@@ -107,31 +109,35 @@ const UserStatus = styled.p`
   display: block;
   max-width: 200px;
   overflow-wrap: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const FollowButton = styled(Button)<{ $followed: string }>`
+  margin-top: auto; /* Отодвигаем кнопку вниз */
+  margin-bottom: 16px; /* Добавляем отступ снизу */
   padding: 8px 16px;
   border-radius: 8px;
   background-color: ${(props) => (props.$followed ? '#bd5629' : '#8c8b8b')};
   color: #fff;
   border: none;
   cursor: pointer;
-  margin-top: 16px;
 
   &:hover {
     background-color: ${(props) => (props.$followed ? '#ff8f00' : '#525252')};
   }
 `;
 
-
 const SendMessageButton = styled(Button)`
+  margin-top: auto; /* Отодвигаем кнопку вниз */
+  margin-bottom: 16px; /* Добавляем отступ снизу */
   padding: 8px 16px;
   border-radius: 8px;
   background-color: #bd5629;
   color: #fff;
   border: none;
   cursor: pointer;
-  margin-top: 16px;
 
   &:hover {
     background-color: #ff8f00;
