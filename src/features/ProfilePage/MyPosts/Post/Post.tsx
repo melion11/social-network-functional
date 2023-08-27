@@ -34,11 +34,7 @@ export const Post = ({ title, like, id }: PostType) => {
             <PostTitle>{title}</PostTitle>
             <LikesContainer>
                 <LikeButton dislike={currentLike} onClick={() => addLikeHandler(!currentLike)}>
-                    {currentLike ? (
-                        <DislikeIcon className="like-icon" />
-                    ) : (
                         <LikeIcon className="like-icon" />
-                    )}
                 </LikeButton>
             </LikesContainer>
             <DeleteButton onClick={deletePostHandler}>
@@ -83,11 +79,11 @@ const LikeButton = styled.button<{dislike: boolean}>`
   right: 10px;
 
   .like-icon {
-    color: #ff8f00;
+    color: ${props => (props.dislike ? '#ff8f00' : '#575757')};
     transition: color 0.3s ease-in-out;
 
     &:hover {
-      color: ${props => props.dislike ? '#575757' : '#f1c049'};
+      color: ${props => (props.dislike ? '#575757' : '#ff8f00')};
     }
   }
 `;
@@ -114,10 +110,6 @@ const DeleteIcon = styled(ClearIcon)`
   color: #858585;
 `;
 
-const LikeIcon = styled(FavoriteBorderIcon)`
-  color: #858585;
-`;
-
-const DislikeIcon = styled(FavoriteIcon)`
+const LikeIcon = styled(FavoriteIcon)`
   color: #858585;
 `;
