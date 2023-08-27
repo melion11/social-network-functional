@@ -1,13 +1,13 @@
 import React from 'react';
 import {NavLink} from "react-router-dom";
 import styled from "styled-components";
-import profile from '../Layout/assets/navbarIcons/icons8-male-user-50.png'
-import dialogs from '../Layout/assets/navbarIcons/icons8-сообщения-50.png'
-import users from '../Layout/assets/navbarIcons/icons8-people-50.png'
-import friends from '../Layout/assets/navbarIcons/icons8-user-account-50.png'
-import music from '../Layout/assets/navbarIcons/icons8-music-50.png'
-import news from '../Layout/assets/navbarIcons/icons8-news-50.png'
-import settings from '../Layout/assets/navbarIcons/icons8-settings-50.png'
+import profile from './assets/icons8-male-user-50.svg'
+import dialogs from './assets/icons8-сообщения-50.svg'
+import users from './assets/icons8-people-50.svg'
+import friends from './assets/icons8-user-account-50.svg'
+import music from './assets/icons8-music-50.svg'
+import news from './assets/icons8-news-50.svg'
+import settings from './assets/icons8-settings-50.svg'
 
 export const Sidebar = () => {
 
@@ -17,7 +17,7 @@ export const Sidebar = () => {
             <SidebarContent>
                 <NavItem>
                     <NavLink to="/profile">
-                        <Icon src={navbarIcons[0]}/>
+                        <Icon src={navbarIcons[0]} />
                         <Text>Profile</Text>
                     </NavLink>
                 </NavItem>
@@ -112,6 +112,16 @@ const NavItem = styled.div`
   .active {
     background: linear-gradient(to bottom, #bd5629, #bd5629);
     font-weight: bold;
+    svg {
+      fill: #fff;
+    }
+  }
+
+  .active a {
+    svg {
+      fill: white;
+      stroke: white;
+    }
   }
 `;
 
@@ -119,6 +129,8 @@ const NavItem = styled.div`
 const Icon = styled.img`
   display: inline-block;
   /* Стили для иконки */
+  width: 35px;
+  height: 35px;
 `;
 
 const Text = styled.span`

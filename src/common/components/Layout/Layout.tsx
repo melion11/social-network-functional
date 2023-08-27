@@ -24,14 +24,15 @@ export const Layout = () => {
                     <MainContentContainer>
                         <Outlet/>
                     </MainContentContainer>
-                </GridContainer>  :
-                <>
+                </GridContainer> :
+
+                <FlexContainer>
                     <Header/>
                     <ErrorSnackbar/>
                     <LoginContainer>
                         <Login/>
                     </LoginContainer>
-                </>
+                </FlexContainer>
 
 
             }
@@ -65,10 +66,6 @@ const GridContainer = styled.div`
     'sidebar main-content';
   gap: 10px;
 
-  
-  
-  
-
   @media (max-width: 768px) {
     grid-template-rows: 3rem auto 1fr 45px; /* Изменено значение */
     grid-template-columns: 1fr;
@@ -95,5 +92,13 @@ const LoginContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 90vh;
+`
+
+const FlexContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  padding: 20px;
+  max-width: 900px;
 `
