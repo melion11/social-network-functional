@@ -6,10 +6,10 @@ import Button from '@mui/material/Button';
 
 type AddFormType = {
     title: string
-    onChange: (value: string)=> void
+    onChange: (value: string) => void
 }
 
-export const AddForm = ({title, onChange}:AddFormType) => {
+export const AddForm = ({title, onChange}: AddFormType) => {
 
     const [text, setText] = useState('')
 
@@ -18,20 +18,22 @@ export const AddForm = ({title, onChange}:AddFormType) => {
     }
 
     const onClickHandler = () => {
-        onChange(text)
-        setText('')
+        if (text.length < 100) {
+            onChange(text)
+            setText('')
+        }
     }
 
     const onKeyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter')
-        onClickHandler()
+            onClickHandler()
     }
 
     return (
-            <AddFormWrapper>
-                <Input value={text} onKeyDown={onKeyDownHandler} onChange={onChangeHandler} placeholder="Write a post..."/>
-                <AddButton  onClick={onClickHandler}>{title}</AddButton>
-            </AddFormWrapper>
+        <AddFormWrapper>
+            <Input value={text} onKeyDown={onKeyDownHandler} onChange={onChangeHandler} placeholder="Write a post..."/>
+            <AddButton disabled={text.length > 100} onClick={onClickHandler}>{title}</AddButton>
+        </AddFormWrapper>
     );
 };
 
@@ -52,6 +54,7 @@ const Input = styled(TextField)`
   .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
     border-color: #bd5629; /* Цвет рамки при фокусе */
   }
+
   .MuiOutlinedInput-root:hover:not(.Mui-focused) .MuiOutlinedInput-notchedOutline {
     border-color: #ff8f00; /* Цвет рамки при наведении */
   }

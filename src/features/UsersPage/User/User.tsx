@@ -119,7 +119,7 @@ const FollowButton = styled(Button)<{ $followed: string }>`
   margin-bottom: 16px; /* Добавляем отступ снизу */
   padding: 8px 16px;
   border-radius: 8px;
-  background-color: ${(props) => (props.$followed ? '#bd5629' : '#8c8b8b')};
+  background-color: ${(props) => (props.$followed ? '#fc7946' : '#8c8b8b')};
   color: #fff;
   border: none;
   cursor: pointer;
@@ -134,7 +134,7 @@ const SendMessageButton = styled(Button)`
   margin-bottom: 16px; /* Добавляем отступ снизу */
   padding: 8px 16px;
   border-radius: 8px;
-  background-color: #bd5629;
+  background-color: #fc7946;
   color: #fff;
   border: none;
   cursor: pointer;

@@ -105,12 +105,12 @@ const NavItem = styled.div`
     transition: background-color 0.3s;
 
     &:hover {
-      background-color: #ff8f00;
+      background: linear-gradient(135deg, #ff8f00, #fc7946);
     }
   }
-
+  
   .active {
-    background: linear-gradient(to bottom, #bd5629, #bd5629);
+    background: linear-gradient(135deg, #fc7946, #bd5629);
     font-weight: bold;
     svg {
       fill: #fff;

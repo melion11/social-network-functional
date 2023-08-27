@@ -13,7 +13,7 @@ export const MyPosts = () => {
     const posts = useAppSelector(selectPosts)
 
     const postsElements = posts.map((post, index) => (
-        <Post key={index} title={post.title}/>
+        <Post key={index} title={post.title} like={post.like} id={post.id}/>
     ))
 
     const addPostHandler = (text: string) => {

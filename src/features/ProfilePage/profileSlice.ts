@@ -22,9 +22,9 @@ const initialState: InitialStateType = {
     },
     status: '',
     posts: [
-        {id: '1', title: 'newPost1'},
-        {id: '2', title: 'newPost2'},
-        {id: '3', title: 'newPost3'},
+        {id: '1', title: 'newPost1', like: false},
+        {id: '2', title: 'newPost2', like: true},
+        {id: '3', title: 'newPost3', like: false},
 
     ],
     loading: false,
@@ -68,7 +68,7 @@ const updateStatus = createAppAsyncThunk('profile/updateStatus',
 )
 
 const updatePhoto = createAppAsyncThunk('profile/updatePhoto',
-    async (photo: File, {rejectWithValue, dispatch})=> {
+    async (photo: File, {rejectWithValue, dispatch}) => {
         try {
             const response = await profileApi.updatePhoto(photo)
             if (response.data.resultCode === ResultCode.Success) {
@@ -86,29 +86,41 @@ const updatePhoto = createAppAsyncThunk('profile/updatePhoto',
 
 const refreshProfile = createAppAsyncThunk('profile/refreshProfile',
     async (data: EditFormType, {rejectWithValue, dispatch, getState}) => {
-    const state = getState() as RootState
-    const userId = state.auth.auth.id
-    try {
-        const response = await profileApi.refreshProfile(data)
-        if (response.data.resultCode === ResultCode.Success && userId) {
-            dispatch(getProfile(userId))
-        }
+        const state = getState() as RootState
+        const userId = state.auth.auth.id
+        try {
+            const response = await profileApi.refreshProfile(data)
+            if (response.data.resultCode === ResultCode.Success && userId) {
+                dispatch(getProfile(userId))
+            }
 
-    } catch (e: any) {
-        return rejectWithValue(e.message)
-    }
-})
+        } catch (e: any) {
+            return rejectWithValue(e.message)
+        }
+    })
 
 const slice = createSlice({
     name: 'profile',
     initialState,
     reducers: {
-        resetProfile: (state) =>{
+        resetProfile: (state) => {
             state.profile = initialState.profile
         },
         addPost: (state, action) => {
-            state.posts.unshift({id: v1(), title: action.payload})
-        }
+            state.posts.unshift({id: v1(), title: action.payload, like: false})
+        },
+        deletePost: (state, action) => {
+            const index = state.posts.findIndex(post => post.id === action.payload)
+            if (index >= 0) {
+                state.posts.splice(index, 1);
+            }
+        },
+        addLike: (state, action: PayloadAction<{id: string, like: boolean}>) => {
+            const post = state.posts.find(post => post.id === action.payload.id)
+            if (post) {
+                post.like = action.payload.like
+            }
+        },
     },
     extraReducers: builder => {
         builder.addCase(getProfile.pending, (state) => {
@@ -147,20 +159,20 @@ const slice = createSlice({
         builder.addCase(updatePhoto.pending, (state) => {
             state.loading = true
         })
-        builder.addCase(updatePhoto.fulfilled, (state, action: PayloadAction<PhotosType>)=> {
+        builder.addCase(updatePhoto.fulfilled, (state, action: PayloadAction<PhotosType>) => {
             state.profile.photos = action.payload
             state.loading = false
         })
-        builder.addCase(updatePhoto.rejected, (state)=> {
+        builder.addCase(updatePhoto.rejected, (state) => {
             state.loading = false
         })
         builder.addCase(refreshProfile.pending, (state) => {
             state.loading = true
         })
-        builder.addCase(refreshProfile.fulfilled, (state)=> {
+        builder.addCase(refreshProfile.fulfilled, (state) => {
             state.loading = false
         })
-        builder.addCase(refreshProfile.rejected, (state, action)=> {
+        builder.addCase(refreshProfile.rejected, (state, action) => {
             state.loading = false
             state.error = action.error.message ?? ''
         })
@@ -178,6 +190,7 @@ export const profileReducer = slice.reducer
 type PostType = {
     id: string
     title: string
+    like: boolean
 }
 
 type InitialStateType = {
