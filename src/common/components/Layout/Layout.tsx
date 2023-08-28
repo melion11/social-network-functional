@@ -13,7 +13,6 @@ export const Layout = () => {
 
     const isLoggedIn = useAppSelector(selectIsLoggedIn)
 
-
     return (
         <AppWrapper>
             {isLoggedIn ?
@@ -33,12 +32,8 @@ export const Layout = () => {
                         <Login/>
                     </LoginContainer>
                 </FlexContainer>
-
-
             }
         </AppWrapper>
-
-
     );
 };
 

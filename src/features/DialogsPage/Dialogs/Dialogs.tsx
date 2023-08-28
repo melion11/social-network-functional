@@ -1,9 +1,11 @@
 import React, {useEffect} from 'react';
 import styled from 'styled-components';
-import {Link, useParams} from "react-router-dom";
+import {Link, NavLink, useParams} from "react-router-dom";
 import {selectDialogs} from '../dialogsPage.selectors';
 import {useAppDispatch, useAppSelector} from '../../../common/hooks';
 import {dialogsThunks} from '../dialogsSlice';
+import {defaultAvatar} from "../../UsersPage/User/User";
+import {Message} from "@mui/icons-material";
 
 
 export const Dialogs = () => {
@@ -22,21 +24,37 @@ export const Dialogs = () => {
     }
 
     const dialogsElements = dialogs.map(dialog => {
+
+        // Преобразование строки в объект даты
+        const dateObject = new Date(dialog.lastDialogActivityDate);
+        // Получение часов и минут
+        const hours = dateObject.getHours();
+        const minutes = dateObject.getMinutes();
+        // Форматирование часов и минут, чтобы было двузначное число
+        const formattedHours = ("0" + hours).slice(-2);
+        const formattedMinutes = ("0" + minutes).slice(-2);
+        // Получение итоговой строки с часами и минутами
+        const formattedTime = formattedHours + ":" + formattedMinutes;
+
         return (
             <LinkContainer key={dialog.id} to={`/dialogs/${dialog.id}/messages`}>
-            <DialogItem  onClick={()=>getMessagesHandler(dialog.id)}>
-                <DialogName>{dialog.userName}</DialogName>
-                <span>{dialog.newMessagesCount}</span>
-            </DialogItem>
+                <DialogItem hasNewMessages={dialog.hasNewMessages} onClick={() => getMessagesHandler(dialog.id)}>
+                    <DialogAvatar src={dialog.photos.small ? dialog.photos.small : defaultAvatar} />
+                    <DialogName>{dialog.userName}</DialogName>
+                        <DialogMessageContainer>
+                            <MessageDate>{formattedTime}</MessageDate>
+                            <MessageCount hasNewMessages={dialog.hasNewMessages}>{dialog.newMessagesCount}</MessageCount>
+                        </DialogMessageContainer>
+                </DialogItem>
             </LinkContainer>
         )
     })
 
     return (
         <>
-                <DialogList>
-                    {dialogsElements}
-                </DialogList>
+            <DialogList>
+                {dialogsElements}
+            </DialogList>
         </>
     );
 };
@@ -52,23 +70,66 @@ const DialogList = styled.div`
   border-right: 2px solid #bd5629;
 `;
 
-const DialogItem = styled.div`
-  padding: 10px;
-  cursor: pointer;
-  background-color: transparent;
 
-  &:hover {
-    background-color: #ebebeb;
-  }
-`;
-
-const DialogName = styled.div`
-  font-weight: bold;
-`;
-
-const LinkContainer = styled(Link)`
+const LinkContainer = styled(NavLink)`
   display: flex;
   flex-direction: column;
   text-decoration: none;
   color: inherit;
+  margin-bottom: 15px;
+  transition: background-color 0.3s ease;
+
+  &.active {
+    background-color: #ff9a5e;
+    // Additional styles for the active dialog
+  }
+
+  &:hover {
+    background-color: #fa833f;
+  }
+
 `;
+
+const DialogItem = styled.div<{hasNewMessages: boolean}>`
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Добавляем выравнивание по горизонтали */
+  gap: 7px;
+  padding: 10px;
+  cursor: pointer;
+  background-color: ${({ hasNewMessages }) => (hasNewMessages ? '#a9a9a9' : 'transparent')};
+ 
+`;
+
+const DialogName = styled.div`
+  color: #fff;
+  font-weight: bold;
+`;
+
+const DialogAvatar = styled.img`
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+`;
+
+const DialogMessageContainer = styled.div`
+  display: flex;
+  gap: 5px;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between; /* Добавляем выравнивание по вертикали */
+  flex: 1;
+`;
+const MessageCount = styled.div<{hasNewMessages: boolean}>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: ${({ hasNewMessages }) => (hasNewMessages ? '#8a8a8a' : 'transparent')};
+  color: ${({ hasNewMessages }) => (hasNewMessages ? '#ffffff' : '#8a8a8a')};;
+`;
+const MessageDate = styled.div`
+  color: #8a8a8a;
+`
