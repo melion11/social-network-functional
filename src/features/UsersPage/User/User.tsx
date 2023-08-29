@@ -78,7 +78,7 @@ const CardContainer = styled.div`
   }
 `;
 
-const LinkContainer = styled(Link)`
+export const LinkContainer = styled(Link)`
   display: flex;
   flex-direction: column;
   align-items: center;

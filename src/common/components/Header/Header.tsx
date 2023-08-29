@@ -38,7 +38,6 @@ export const Header = () => {
 
 const HeaderContainer = styled.header`
   background: linear-gradient(to top, #f1c049, #f38550);
-  //background: linear-gradient(to top, #f38550, #414141);
   grid-area: header;
   display: flex;
   align-items: center;

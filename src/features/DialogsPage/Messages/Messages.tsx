@@ -1,14 +1,16 @@
-import React, {ChangeEvent, KeyboardEvent, useEffect, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, useEffect, useRef, useState} from 'react';
 import styled from 'styled-components';
-import {UserMessage} from "./UserMessage/UserMessage";
-import {FriendMessage} from "./FriendMessage/FriendMessage";
-import {useParams} from "react-router-dom";
+import {UserMessage} from './UserMessage/UserMessage';
+import {FriendMessage} from './FriendMessage/FriendMessage';
+import {useLocation, useParams} from 'react-router-dom';
 import {selectMessages} from '../dialogsPage.selectors';
 import {useAppDispatch, useAppSelector} from '../../../common/hooks';
 import {dialogsThunks} from '../dialogsSlice';
 import {selectAuthId} from '../../Login/auth.selectors';
-
-
+import Button from '@mui/material/Button';
+import {defaultAvatar, LinkContainer} from '../../UsersPage/User/User';
+import Lottie from 'lottie-react';
+import startChatting from '../assets/animation_llwjjbbh.json';
 
 export const Messages = () => {
 
@@ -17,6 +19,8 @@ export const Messages = () => {
     const dispatch = useAppDispatch()
     const {userId} = useParams()
     const [body, setBody] = useState('')
+    const location = useLocation()
+
 
     useEffect(() => {
         let timerId: number;
@@ -29,7 +33,7 @@ export const Messages = () => {
             timerId = +setTimeout(() => {
                 getMessages();
                 startInterval();
-            }, 1000);
+            }, 10000);
         };
         startInterval();
         return () => {
@@ -39,9 +43,18 @@ export const Messages = () => {
 
     const messagesElements = messages.map(message => {
         if (message.senderId === authId) {
-            return <UserMessage key={message.id} id={message.id} body={message.body} senderName={message.senderName}/>
+            return <UserMessage key={message.id}
+                                id={message.id}
+                                body={message.body}
+                                viewed={message.viewed}
+                                addedAt={message.addedAt}
+            />
         } else {
-            return <FriendMessage key={message.id} id={message.id} body={message.body} senderName={message.senderName}/>
+            return <FriendMessage key={message.id}
+                                  id={message.id}
+                                  body={message.body}
+                                  addedAt={message.addedAt}
+            />
         }
     })
 
@@ -62,36 +75,87 @@ export const Messages = () => {
         }
     }
 
-    return (
-        <ParentContainer>
-            <MessageContainer>
-                <MessageList>{messagesElements}</MessageList>
-            </MessageContainer>
+    const messageContainerRef = useRef<HTMLUListElement | null>(null);
 
-            <MessageInputContainer>
-                <MessageInput value={body} onKeyDown={sendEnterMessageHandler} onChange={writeMessageHandler}
-                              placeholder="Type your message..."/>
-                <SendMessageButton onClick={sendMessageHandler}>Send</SendMessageButton>
-            </MessageInputContainer>
-        </ParentContainer>
-    );
+    useEffect(() => {
+        if (messageContainerRef.current) {
+            messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+        }
+    }, [messages]);
+
+    //
+    // useEffect(() => {
+    //     if (messageContainerRef.current) {
+    //         messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+    //     }
+    // }, [messages]);
+    //
+    // const handleScroll = () => {
+    //     if (messageContainerRef.current) {
+    //         const { scrollTop, clientHeight, scrollHeight } = messageContainerRef.current;
+    //
+    //         if (scrollTop === 0 && userId) {
+    //             // Достигнут верхний предел скролла
+    //             // Здесь вы можете выполнить запрос на следующую страницу сообщений
+    //             dispatch(dialogsThunks.getUserMessages(+userId));
+    //         }
+    //     }
+    // };
+    //
+    // useEffect(() => {
+    //     if (messageContainerRef.current) {
+    //         messageContainerRef.current.addEventListener('scroll', handleScroll);
+    //     }
+    //
+    //     return () => {
+    //         if (messageContainerRef.current) {
+    //             messageContainerRef.current.removeEventListener('scroll', handleScroll);
+    //         }
+    //     };
+
+    return (
+        <>
+            {messages.length === 0 ?
+                <Lottie  animationData={startChatting} loop={true}  /> :
+                <ParentContainer>
+                    <DialogHeaderContainer>
+                        <LinkContainer to={`/profile/${userId}`}>
+                        <Avatar src={location.state?.photos || defaultAvatar} alt="Avatar"/>
+                        </LinkContainer>
+                        <Username>{location.state?.userName}</Username>
+                    </DialogHeaderContainer>
+                    <MessageContainer>
+                        <MessageList ref={messageContainerRef}>{messagesElements}</MessageList>
+                    </MessageContainer>
+
+                    <MessageInputContainer>
+                        <MessageInput value={body} onKeyDown={sendEnterMessageHandler} onChange={writeMessageHandler}
+                                      placeholder="Type your message..."/>
+                        <SendMessageButton onClick={sendMessageHandler}>Send</SendMessageButton>
+                    </MessageInputContainer>
+                </ParentContainer>
+            }
+        </>)
+        ;
 };
 
 
 const ParentContainer = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
-  width: 100%; /* Установите желаемую ширину, если необходимо */
-  height: calc(100vh - 200px); /* Замените на необходимую высоту для контейнера с сообщениями */
+  width: 100%;
+  height: calc(100vh - 109px);
+
 `;
 
 const MessageContainer = styled.div`
-  flex: 2; /* Занимает 2/3 ширины контейнера */
-  overflow: auto; /* Добавить прокрутку, если сообщения выходят за пределы панели */
-  padding: 20px;
+  flex: 1;
+  overflow: auto;
+  padding: 0 20px 5px 20px;
   display: flex;
   flex-direction: column;
-  //align-items: center; /* Располагает элементы по центру по горизонтали */
+  justify-content: flex-end;
 `;
 
 const MessageList = styled.ul`
@@ -103,7 +167,7 @@ const MessageInputContainer = styled.div`
   display: flex;
   position: sticky;
   bottom: 0;
-  background-color: #3f3f3f;
+  background-color: #343434;
   padding: 10px;
 `;
 
@@ -115,12 +179,36 @@ const MessageInput = styled.input`
   outline: none;
 `;
 
-const SendMessageButton = styled.button`
+const SendMessageButton = styled(Button)`
   padding: 10px 20px;
-  border-radius: 8px;
-  background-color: #4c75a3;
+  border-radius: 50px;
+  background-color: #fa833f;
   color: #fff;
   border: none;
   cursor: pointer;
   margin-left: 10px;
+`;
+
+const DialogHeaderContainer = styled.div`
+  width: 100%;
+  padding: 10px;
+  height: 40px;
+  background: linear-gradient(to top, #f1c049, #f38550);
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+`;
+
+const Avatar = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+`;
+
+const Username = styled.h3`
+  margin: 0;
+  font-size: 18px;
 `;

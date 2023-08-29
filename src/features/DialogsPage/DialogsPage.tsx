@@ -2,15 +2,18 @@ import React from 'react';
 import styled from 'styled-components';
 import {Navigate} from 'react-router-dom';
 import {Dialogs} from './Dialogs/Dialogs';
-import {Messages} from './Messages/Messages';
 import {useAppSelector} from '../../common/hooks';
 import {selectIsLoggedIn} from '../Login/auth.selectors';
-
+import {selectLoading} from './dialogsPage.selectors';
+import {LinearPreloader} from '../../common/components';
+import {Messages} from './Messages/Messages';
 
 
 export const DialogsPage = () => {
 
+    const loading = useAppSelector(selectLoading)
     const isLoggedIn = useAppSelector(selectIsLoggedIn);
+
 
     if (!isLoggedIn) {
         return <Navigate to={'/login'}/>
@@ -18,9 +21,13 @@ export const DialogsPage = () => {
 
     return (
         <>
+            {loading && <LinearPreloader/>}
+
             <Container>
                 <Dialogs/>
                 <Messages/>
+
+
             </Container>
         </>
     );
@@ -28,8 +35,8 @@ export const DialogsPage = () => {
 
 const Container = styled.div`
   display: flex;
-  height: 100vh;
   width: 100%;
+  background-color: #343434;
   overflow: hidden; /* Добавлено, чтобы предотвратить появление горизонтальной прокрутки */
 
   ::-webkit-scrollbar {
@@ -43,5 +50,5 @@ const Container = styled.div`
   ::-webkit-scrollbar-thumb {
     background-color: #c26604;
   }
-  
+
 `;

@@ -6,8 +6,8 @@ export const dialogsApi = {
     getDialogs() {
         return instance.get<DialogsType[]>(`dialogs`)
     },
-    getUserMessages(userId: number) {
-        return instance.get<MessagesType>(`dialogs/${userId}/messages`)
+    getUserMessages(userId: number, page: number = 1, count: number = 10) {
+        return instance.get<MessagesType>(`dialogs/${userId}/messages?page=${page}&count=${count}`)
     },
     getStartChatting(userId: number) {
         return instance.put<ResponseType>(`dialogs/${userId}`)

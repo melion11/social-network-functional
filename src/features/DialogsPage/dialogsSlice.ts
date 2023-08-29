@@ -15,9 +15,9 @@ const initialState: InitialStateType = {
 }
 
 const deleteMessage = createAppAsyncThunk('dialogs/deleteMessage',
-    async (messageId: string, {rejectWithValue})=> {
+    async (messageId: string, {rejectWithValue,dispatch})=> {
             try {
-        const response = await dialogsApi.deleteMessage(messageId)
+                const response = await dialogsApi.deleteMessage(messageId)
             } catch (e: any) {
                 return rejectWithValue(e.message)
             }
@@ -78,9 +78,6 @@ const slice = createSlice(({
         builder.addCase(getDialogs.rejected, (state, action) => {
             state.error = action.error.message ?? ''
             state.loading = false
-        })
-        builder.addCase(getUserMessages.pending, (state) => {
-            state.loading = true
         })
         builder.addCase(getUserMessages.fulfilled, (state, action: PayloadAction<{ messages: MessagesType }>) => {
             state.messages.items = action.payload.messages.items

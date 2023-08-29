@@ -1,23 +1,29 @@
 import React from 'react';
 import styled from 'styled-components';
-import {defaultAvatar} from "../../../UsersPage/User/User";
 import ClearIcon from '@mui/icons-material/Clear';
 import {useAppDispatch} from '../../../../common/hooks';
 import {dialogsThunks} from '../../dialogsSlice';
+import {
+    DeleteMessage,
+    MessageContent,
+    MessageDate,
+    MessageDateViewWrapper, MessageInfo, MessageItem,
+    MessageText,
+    MessageTextWrapper
+} from "../UserMessage/UserMessage";
+import {getHoursMinutesDate} from "../../../../common/utils/get-hours-minutes-date";
+import DoneAllIcon from "@mui/icons-material/DoneAll";
+import DoneIcon from "@mui/icons-material/Done";
 
 type FriendMessageType = {
-    addedAt?: string
+    addedAt: string
     body: string
-    id?: string
-    recipientId?: number
-    senderId?: number
-    senderName: string
-    translatedBody?: null
-    viewed?: boolean
+    id: string
 }
 
 
-export const FriendMessage = ({senderName, body, id}: FriendMessageType) => {
+export const FriendMessage = ({body, id, addedAt}: FriendMessageType) => {
+
 
     const dispatch = useAppDispatch()
 
@@ -25,54 +31,34 @@ export const FriendMessage = ({senderName, body, id}: FriendMessageType) => {
         if (id) dispatch(dialogsThunks.deleteMessage(id))
     }
 
-    return (
-        <MessageItem>
+    const formattedTime = getHoursMinutesDate(addedAt)
 
-            <ClearIcon onClick={deleteMessageHandler}/>
-            <MessageContent>
-                <UserProfilePic src={defaultAvatar} alt="User Profile" />
-                <MessageBody>
-                    <UserName>{senderName}</UserName>
+
+    return (
+        <MessageFriendItem>
+            <MessageFriendContent>
+                <MessageTextWrapper>
                     <MessageText>{body}</MessageText>
-                </MessageBody>
-            </MessageContent>
-        </MessageItem>
+                </MessageTextWrapper>
+                <MessageInfo>
+                    <DeleteMessage onClick={deleteMessageHandler} />
+                    <MessageDateViewWrapper>
+                        <MessageDate>{formattedTime}</MessageDate>
+                    </MessageDateViewWrapper>
+                </MessageInfo>
+            </MessageFriendContent>
+        </MessageFriendItem>
     );
 };
 
-const MessageItem = styled.div`
-  display: flex;
+const MessageFriendItem = styled(MessageItem)`
   justify-content: flex-start;
-  margin-bottom: 10px;
 `;
 
-const MessageContent = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  border-radius: 8px;
-  background-color: #E5E7E9;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-`;
+const MessageFriendContent = styled(MessageContent)`
+  border-radius: 10px 10px 10px 0;
+  background-color: #2c2c2c;
+`
 
-const UserProfilePic = styled.img`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
-`;
 
-const MessageBody = styled.div``;
-
-const UserName = styled.div`
-  font-weight: bold;
-  margin-bottom: 5px;
-`;
-
-const MessageText = styled.div`
-  margin: 0;
-  color: #666;
-  max-width: 300px;
-  overflow-wrap: break-word;
-`;
 

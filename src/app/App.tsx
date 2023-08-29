@@ -29,14 +29,15 @@ function App() {
 
     return (
         <Routes>
-            <Route path={'/'} element={<Layout/>}>
-                <Route index element={<ProfilePage/>}/>
-                <Route path={'/profile/:userId?'} element={<ProfilePage/>}/>
-                <Route path={'/dialogs/:userId?/messages?'} element={<DialogsPage/>}/>
-                <Route path={'/users'} element={<UsersPage/>}/>
-                <Route path={'/friends'} element={<FriendsPage/>}/>
-                <Route path={'*'} element={<Page404/>}/>
-                <Route path={'/login'} element={<Login/>}/>
+            <Route path="/" element={<Layout />}>
+                <Route index element={<ProfilePage />} />
+                <Route path="/profile/:userId?" element={<ProfilePage />} />
+                <Route path="/dialogs" element={<DialogsPage />} />
+                <Route path="/dialogs/:userId/messages" element={<DialogsPage />} />
+                <Route path="/users" element={<UsersPage />} />
+                <Route path="/friends" element={<FriendsPage />} />
+                <Route path="*" element={<Page404 />} />
+                <Route path="/login" element={<Login />} />
             </Route>
         </Routes>
 
