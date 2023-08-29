@@ -11,6 +11,7 @@ import Button from '@mui/material/Button';
 import {defaultAvatar, LinkContainer} from '../../UsersPage/User/User';
 import Lottie from 'lottie-react';
 import startChatting from '../assets/animation_llwjjbbh.json';
+import {getHoursMinutesDate} from '../../../common/utils/get-hours-minutes-date';
 
 export const Messages = () => {
 
@@ -19,21 +20,23 @@ export const Messages = () => {
     const dispatch = useAppDispatch()
     const {userId} = useParams()
     const [body, setBody] = useState('')
-    const location = useLocation()
 
+    const location = useLocation()
+    const userData = location.state
 
     useEffect(() => {
         let timerId: number;
         const getMessages = () => {
             if (userId) {
-                dispatch(dialogsThunks.getUserMessages(+userId));
+                dispatch(dialogsThunks.getUserMessages(+userId))
+                dispatch(dialogsThunks.getDialogs())
             }
         };
         const startInterval = () => {
             timerId = +setTimeout(() => {
                 getMessages();
                 startInterval();
-            }, 10000);
+            }, 3000);
         };
         startInterval();
         return () => {
@@ -116,13 +119,16 @@ export const Messages = () => {
     return (
         <>
             {messages.length === 0 ?
-                <Lottie  animationData={startChatting} loop={true}  /> :
+                <Lottie animationData={startChatting} loop={true}/> :
                 <ParentContainer>
                     <DialogHeaderContainer>
                         <LinkContainer to={`/profile/${userId}`}>
-                        <Avatar src={location.state?.photos || defaultAvatar} alt="Avatar"/>
+                            <Avatar src={userData?.photos || defaultAvatar} alt="Avatar"/>
                         </LinkContainer>
-                        <Username>{location.state?.userName}</Username>
+                        <UserInfo>
+                            <Username>{userData?.userName}</Username>
+                            <UserActivity> last seen {getHoursMinutesDate(userData?.lastUserActivityDate)}</UserActivity>
+                        </UserInfo>
                     </DialogHeaderContainer>
                     <MessageContainer>
                         <MessageList ref={messageContainerRef}>{messagesElements}</MessageList>
@@ -208,7 +214,19 @@ const Avatar = styled.img`
   margin-right: 10px;
 `;
 
+const UserInfo = styled.h3`
+  display: flex;
+  flex-direction: column;
+  
+`;
+
 const Username = styled.h3`
   margin: 0;
   font-size: 18px;
+`;
+
+const UserActivity = styled.h3`
+  margin: 0;
+  color: #464646;
+  font-size: 14px;
 `;

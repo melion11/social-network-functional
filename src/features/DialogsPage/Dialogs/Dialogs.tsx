@@ -26,8 +26,8 @@ export const Dialogs = () => {
 
     const navigate = useNavigate()
 
-    const handleClick = (id: number, photos: PhotosType, userName: string) => {
-        navigate(`/dialogs/${id}/messages`, {state: {photos: photos.small, userName}})
+    const handleClick = (id: number, photos: PhotosType, userName: string, lastUserActivityDate: string) => {
+        navigate(`/dialogs/${id}/messages`, {state: {photos: photos.small, userName, lastUserActivityDate}})
     }
 
     const dialogsElements = dialogs.map(dialog => {
@@ -35,7 +35,8 @@ export const Dialogs = () => {
         const formattedTime = getHoursMinutesDate(dialog.lastDialogActivityDate)
 
         return (
-            <LinkContainer key={dialog.id} onClick={()=>handleClick(dialog.id, dialog.photos, dialog.userName)}>
+            <LinkContainer key={dialog.id}
+                           onClick={()=>handleClick(dialog.id, dialog.photos, dialog.userName, dialog.lastUserActivityDate)}>
                 <DialogItem hasNewMessages={dialog.hasNewMessages} onClick={() => getMessagesHandler(dialog.id)}>
                     <DialogAvatar src={dialog.photos.small ? dialog.photos.small : defaultAvatar}/>
                     <DialogName>{dialog.userName}</DialogName>

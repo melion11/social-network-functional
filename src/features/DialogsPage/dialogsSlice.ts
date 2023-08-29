@@ -68,9 +68,6 @@ const slice = createSlice(({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder.addCase(getDialogs.pending, (state) => {
-            state.loading = true
-        })
         builder.addCase(getDialogs.fulfilled, (state, action: PayloadAction<{ dialogs: DialogsType[] }>) => {
             state.dialogs = action.payload.dialogs
             state.loading = false
