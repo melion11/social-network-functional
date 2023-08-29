@@ -66,7 +66,11 @@ const getDialogs = createAppAsyncThunk('dialogs/getDialogs',
 const slice = createSlice(({
     name: 'dialogs',
     initialState,
-    reducers: {},
+    reducers: {
+        resetMessages(state) {
+            state.messages.items = []
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(getDialogs.fulfilled, (state, action: PayloadAction<{ dialogs: DialogsType[] }>) => {
             state.dialogs = action.payload.dialogs

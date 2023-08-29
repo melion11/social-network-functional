@@ -5,13 +5,14 @@ import {FriendMessage} from './FriendMessage/FriendMessage';
 import {useLocation, useParams} from 'react-router-dom';
 import {selectMessages} from '../dialogsPage.selectors';
 import {useAppDispatch, useAppSelector} from '../../../common/hooks';
-import {dialogsThunks} from '../dialogsSlice';
+import {dialogsActions, dialogsThunks} from '../dialogsSlice';
 import {selectAuthId} from '../../Login/auth.selectors';
 import Button from '@mui/material/Button';
 import {defaultAvatar, LinkContainer} from '../../UsersPage/User/User';
 import Lottie from 'lottie-react';
 import startChatting from '../assets/animation_llwjjbbh.json';
 import {getHoursMinutesDate} from '../../../common/utils/get-hours-minutes-date';
+import {CircularProgress} from '@mui/material';
 
 export const Messages = () => {
 
@@ -40,6 +41,7 @@ export const Messages = () => {
         };
         startInterval();
         return () => {
+            dispatch(dialogsActions.resetMessages())
             clearTimeout(timerId);
         };
     }, [userId]);
@@ -115,6 +117,7 @@ export const Messages = () => {
     //             messageContainerRef.current.removeEventListener('scroll', handleScroll);
     //         }
     //     };
+
 
     return (
         <>
