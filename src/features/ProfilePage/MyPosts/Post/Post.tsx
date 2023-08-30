@@ -33,7 +33,7 @@ export const Post = ({ title, like, id }: PostType) => {
         <StyledPostItem>
             <PostTitle>{title}</PostTitle>
             <LikesContainer>
-                <LikeButton dislike={currentLike} onClick={() => addLikeHandler(!currentLike)}>
+                <LikeButton $dislike={currentLike} onClick={() => addLikeHandler(!currentLike)}>
                         <LikeIcon className="like-icon" />
                 </LikeButton>
             </LikesContainer>
@@ -69,7 +69,7 @@ const LikesContainer = styled.div`
   margin-top: auto;
 `;
 
-const LikeButton = styled.button<{dislike: boolean}>`
+const LikeButton = styled.button<{$dislike: boolean}>`
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -79,11 +79,11 @@ const LikeButton = styled.button<{dislike: boolean}>`
   right: 10px;
 
   .like-icon {
-    color: ${props => (props.dislike ? '#ff8f00' : '#575757')};
+    color: ${props => (props.$dislike ? '#ff8f00' : '#575757')};
     transition: color 0.3s ease-in-out;
 
     &:hover {
-      color: ${props => (props.dislike ? '#575757' : '#ff8f00')};
+      color: ${props => (props.$dislike ? '#575757' : '#ff8f00')};
     }
   }
 `;

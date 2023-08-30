@@ -39,7 +39,9 @@ const Avatar = styled.img`
   border-radius: 8px;
   object-fit: cover;
   transition: opacity 0.3s;
-
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5);
+  
+  
   ${AvatarContainer}:hover & {
     opacity: 0.4;
   }

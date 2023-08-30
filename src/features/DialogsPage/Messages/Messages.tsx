@@ -1,4 +1,4 @@
-import React, {ChangeEvent, KeyboardEvent, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import styled from 'styled-components';
 import {UserMessage} from './UserMessage/UserMessage';
 import {FriendMessage} from './FriendMessage/FriendMessage';
@@ -7,12 +7,14 @@ import {selectMessages} from '../dialogsPage.selectors';
 import {useAppDispatch, useAppSelector} from '../../../common/hooks';
 import {dialogsActions, dialogsThunks} from '../dialogsSlice';
 import {selectAuthId} from '../../Login/auth.selectors';
-import Button from '@mui/material/Button';
 import {defaultAvatar, LinkContainer} from '../../UsersPage/User/User';
 import Lottie from 'lottie-react';
 import startChatting from '../assets/animation_llwjjbbh.json';
 import {getHoursMinutesDate} from '../../../common/utils/get-hours-minutes-date';
-import {CircularProgress} from '@mui/material';
+import {AddForm} from '../../../common/components';
+import {useInView} from 'react-intersection-observer';
+
+
 
 export const Messages = () => {
 
@@ -20,24 +22,42 @@ export const Messages = () => {
     const authId = useAppSelector(selectAuthId)
     const dispatch = useAppDispatch()
     const {userId} = useParams()
-    const [body, setBody] = useState('')
-
     const location = useLocation()
     const userData = location.state
+    const formattedData = getHoursMinutesDate(userData?.lastUserActivityDate)
+    const [currentPage, setCurrentPage] = useState(1)
+    const [fetching, setFetching] = useState(false)
+
+
+    const messagesElements = messages.map(message => {
+        if (message.senderId === authId) {
+            return <UserMessage key={message.id} id={message.id} body={message.body} viewed={message.viewed}
+                                addedAt={message.addedAt}/>
+        } else {
+            return <FriendMessage key={message.id} id={message.id} body={message.body} addedAt={message.addedAt}/>
+        }
+    })
+
+    const sendMessageHandler = (body: string) => {
+        if (userId) {
+            dispatch(dialogsThunks.sendMessage({userId: +userId, body}));
+        }
+    }
+
+    const getMessages = () => {
+        if (userId) {
+            dispatch(dialogsThunks.getUserMessages({userId: +userId, page: currentPage}))
+            dispatch(dialogsThunks.getDialogs())
+        }
+    };
 
     useEffect(() => {
         let timerId: number;
-        const getMessages = () => {
-            if (userId) {
-                dispatch(dialogsThunks.getUserMessages(+userId))
-                dispatch(dialogsThunks.getDialogs())
-            }
-        };
         const startInterval = () => {
             timerId = +setTimeout(() => {
                 getMessages();
                 startInterval();
-            }, 3000);
+            }, 100000);
         };
         startInterval();
         return () => {
@@ -46,77 +66,72 @@ export const Messages = () => {
         };
     }, [userId]);
 
-    const messagesElements = messages.map(message => {
-        if (message.senderId === authId) {
-            return <UserMessage key={message.id}
-                                id={message.id}
-                                body={message.body}
-                                viewed={message.viewed}
-                                addedAt={message.addedAt}
-            />
-        } else {
-            return <FriendMessage key={message.id}
-                                  id={message.id}
-                                  body={message.body}
-                                  addedAt={message.addedAt}
-            />
-        }
-    })
-
-    const writeMessageHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        setBody(e.currentTarget.value)
-    }
-
-    const sendMessageHandler = () => {
-        if (userId) {
-            dispatch(dialogsThunks.sendMessage({userId: +userId, body}));
-            setBody('')
-        }
-    }
-
-    const sendEnterMessageHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            sendMessageHandler()
-        }
-    }
-
     const messageContainerRef = useRef<HTMLUListElement | null>(null);
 
     useEffect(() => {
+        if (userId) {
+            dispatch(dialogsThunks.getUserMessages({userId: +userId, page: 1})).then(()=> {
+                if (messageContainerRef.current) {
+                    messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+                }
+            })
+            return () => {
+                dispatch(dialogsActions.resetMessages())
+            }
+        }
+    }, []);
+
+
+
+    useLayoutEffect(() => {
         if (messageContainerRef.current) {
-            messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+            messageContainerRef.current.addEventListener('scroll', handleScroll);
+            messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight - messageContainerRef.current.scrollTop
+
+        }
+
+        return () => {
+            if (messageContainerRef.current) {
+                messageContainerRef.current.removeEventListener('scroll', handleScroll);
+            }
         }
     }, [messages]);
 
-    //
-    // useEffect(() => {
-    //     if (messageContainerRef.current) {
-    //         messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
-    //     }
-    // }, [messages]);
-    //
-    // const handleScroll = () => {
-    //     if (messageContainerRef.current) {
-    //         const { scrollTop, clientHeight, scrollHeight } = messageContainerRef.current;
-    //
-    //         if (scrollTop === 0 && userId) {
-    //             // Достигнут верхний предел скролла
-    //             // Здесь вы можете выполнить запрос на следующую страницу сообщений
-    //             dispatch(dialogsThunks.getUserMessages(+userId));
-    //         }
-    //     }
-    // };
-    //
-    // useEffect(() => {
-    //     if (messageContainerRef.current) {
-    //         messageContainerRef.current.addEventListener('scroll', handleScroll);
-    //     }
-    //
-    //     return () => {
-    //         if (messageContainerRef.current) {
-    //             messageContainerRef.current.removeEventListener('scroll', handleScroll);
-    //         }
-    //     };
+    useLayoutEffect(() => {
+        if (messageContainerRef.current) {
+            messageContainerRef.current.addEventListener('scroll', handleScroll);
+            messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight - messageContainerRef.current.scrollTop
+
+        }
+
+        return () => {
+            if (messageContainerRef.current) {
+                messageContainerRef.current.removeEventListener('scroll', handleScroll);
+            }
+        }
+    }, [messages.length]);
+
+
+    useEffect(()=> {
+        if (fetching && userId) {
+            setCurrentPage(currentPage + 1)
+            dispatch(dialogsThunks.getUserMessages({userId: +userId, page: currentPage}))
+            setFetching(false)
+        }
+
+    }, [fetching])
+
+    const handleScroll = () => {
+        const scrollTop = messageContainerRef.current!.scrollTop;
+        setFetching(true);
+        console.log('123')
+        if (scrollTop === 0  ) {
+            setFetching(true);
+        }
+
+    };
+
+
 
 
     return (
@@ -130,18 +145,13 @@ export const Messages = () => {
                         </LinkContainer>
                         <UserInfo>
                             <Username>{userData?.userName}</Username>
-                            <UserActivity> last seen {getHoursMinutesDate(userData?.lastUserActivityDate)}</UserActivity>
+                            <UserActivity> last seen {formattedData}</UserActivity>
                         </UserInfo>
                     </DialogHeaderContainer>
                     <MessageContainer>
                         <MessageList ref={messageContainerRef}>{messagesElements}</MessageList>
                     </MessageContainer>
-
-                    <MessageInputContainer>
-                        <MessageInput value={body} onKeyDown={sendEnterMessageHandler} onChange={writeMessageHandler}
-                                      placeholder="Type your message..."/>
-                        <SendMessageButton onClick={sendMessageHandler}>Send</SendMessageButton>
-                    </MessageInputContainer>
+                    <AddForm title={'Send'} placeholder={'Type your message...'} onChange={sendMessageHandler}/>
                 </ParentContainer>
             }
         </>)
@@ -169,33 +179,10 @@ const MessageContainer = styled.div`
 
 const MessageList = styled.ul`
   list-style-type: none;
-  padding: 0
-`;
-
-const MessageInputContainer = styled.div`
-  display: flex;
-  position: sticky;
-  bottom: 0;
-  background-color: #343434;
-  padding: 10px;
-`;
-
-const MessageInput = styled.input`
-  flex-grow: 1;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  outline: none;
-`;
-
-const SendMessageButton = styled(Button)`
-  padding: 10px 20px;
-  border-radius: 50px;
-  background-color: #fa833f;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  margin-left: 10px;
+  padding: 0;
+  height: 80vh;
+  border: 1px solid red;
+  overflow: auto;
 `;
 
 const DialogHeaderContainer = styled.div`
@@ -220,7 +207,7 @@ const Avatar = styled.img`
 const UserInfo = styled.h3`
   display: flex;
   flex-direction: column;
-  
+
 `;
 
 const Username = styled.h3`

@@ -14,17 +14,12 @@ export const Dialogs = () => {
     const dialogs = useAppSelector(selectDialogs)
     const dispatch = useAppDispatch()
     const {userId} = useParams()
+    const navigate = useNavigate()
 
     useEffect(() => {
         dispatch(dialogsThunks.getDialogs())
-        if (userId) dispatch(dialogsThunks.getUserMessages(+userId))
-    }, [])
-
-    const getMessagesHandler = (userId: number) => {
-        dispatch(dialogsThunks.getUserMessages(userId))
-    }
-
-    const navigate = useNavigate()
+        if (userId) dispatch(dialogsThunks.getUserMessages({userId: +userId}))
+    }, [userId])
 
     const handleClick = (id: number, photos: PhotosType, userName: string, lastUserActivityDate: string) => {
         navigate(`/dialogs/${id}/messages`, {state: {photos: photos.small, userName, lastUserActivityDate}})
@@ -37,12 +32,12 @@ export const Dialogs = () => {
         return (
             <LinkContainer key={dialog.id}
                            onClick={()=>handleClick(dialog.id, dialog.photos, dialog.userName, dialog.lastUserActivityDate)}>
-                <DialogItem hasNewMessages={dialog.hasNewMessages} onClick={() => getMessagesHandler(dialog.id)}>
+                <DialogItem $hasNewMessages={dialog.hasNewMessages} >
                     <DialogAvatar src={dialog.photos.small ? dialog.photos.small : defaultAvatar}/>
                     <DialogName>{dialog.userName}</DialogName>
                     <DialogMessageContainer>
                         <MessageDate>{formattedTime}</MessageDate>
-                        <MessageCount hasNewMessages={dialog.hasNewMessages}>{dialog.newMessagesCount}</MessageCount>
+                        <MessageCount $hasNewMessages={dialog.hasNewMessages}>{dialog.newMessagesCount}</MessageCount>
                     </DialogMessageContainer>
                 </DialogItem>
             </LinkContainer>
@@ -63,13 +58,12 @@ const DialogList = styled.div`
   min-width: 300px; /* Минимальная ширина диалоговой панели */
   max-width: 400px; /* Максимальная ширина диалоговой панели */
   overflow: auto; /* Добавить прокрутку, если диалоги выходят за пределы панели */
-  height: 79vh;
+  height: 87vh;
   background-color: #3a3a3a;
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   border-right: 2px solid #bd5629;
 `;
-
 
 const LinkContainer = styled.div`
   display: flex;
@@ -81,24 +75,21 @@ const LinkContainer = styled.div`
 
   &.active {
     background-color: #ff9a5e;
-    // Additional styles for the active dialog
   }
 
   &:hover {
     background-color: #fa833f;
   }
-
 `;
 
-const DialogItem = styled.div<{ hasNewMessages: boolean }>`
+const DialogItem = styled.div<{ $hasNewMessages: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between; /* Добавляем выравнивание по горизонтали */
   gap: 7px;
   padding: 10px;
   cursor: pointer;
-  background-color: ${({hasNewMessages}) => (hasNewMessages ? '#a9a9a9' : 'transparent')};
-
+  background-color: ${({$hasNewMessages}) => ($hasNewMessages ? '#a9a9a9' : 'transparent')};
 `;
 
 const DialogName = styled.div`
@@ -120,16 +111,17 @@ const DialogMessageContainer = styled.div`
   justify-content: space-between; /* Добавляем выравнивание по вертикали */
   flex: 1;
 `;
-const MessageCount = styled.div<{ hasNewMessages: boolean }>`
+const MessageCount = styled.div<{ $hasNewMessages: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: ${({hasNewMessages}) => (hasNewMessages ? '#8a8a8a' : 'transparent')};
-  color: ${({hasNewMessages}) => (hasNewMessages ? '#ffffff' : '#8a8a8a')};;
+  background-color: ${({$hasNewMessages}) => ($hasNewMessages ? '#8a8a8a' : 'transparent')};
+  color: ${({$hasNewMessages}) => ($hasNewMessages ? '#ffffff' : '#8a8a8a')};
 `;
+
 const MessageDate = styled.div`
   color: #8a8a8a;
-`
+`;

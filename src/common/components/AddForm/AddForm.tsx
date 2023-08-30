@@ -6,10 +6,11 @@ import Button from '@mui/material/Button';
 
 type AddFormType = {
     title: string
+    placeholder?: string
     onChange: (value: string) => void
 }
 
-export const AddForm = ({title, onChange}: AddFormType) => {
+export const AddForm = ({title,placeholder, onChange}: AddFormType) => {
 
     const [text, setText] = useState('')
 
@@ -31,7 +32,7 @@ export const AddForm = ({title, onChange}: AddFormType) => {
 
     return (
         <AddFormWrapper>
-            <Input value={text} onKeyDown={onKeyDownHandler} onChange={onChangeHandler} placeholder="Write a post..."/>
+            <Input value={text} onKeyDown={onKeyDownHandler} onChange={onChangeHandler} placeholder={placeholder}/>
             <AddButton disabled={text.length > 100} onClick={onClickHandler}>{title}</AddButton>
         </AddFormWrapper>
     );
@@ -39,17 +40,19 @@ export const AddForm = ({title, onChange}: AddFormType) => {
 
 const AddFormWrapper = styled.div`
   display: flex;
+  justify-content: center;
+  padding: 15px;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
   margin-bottom: 10px;
+  box-shadow: 2px 2px 4px 0px rgba(112, 112, 112, 0.5);
 `;
 
 const Input = styled(TextField)`
   flex-grow: 1;
-  padding: 20px;
+  padding: 5px;
   border-radius: 8px;
   outline: none;
-  color: #858585;
 
   .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
     border-color: #bd5629; /* Цвет рамки при фокусе */
@@ -66,7 +69,10 @@ const AddButton = styled(Button)`
   background-color: #f38550;
   color: #2f2f2f;
   cursor: pointer;
-
+  border: none;
+  margin-left: 10px;
+  
+  
   &:hover {
     background-color: #2f2f2f;
     color: #f38550;

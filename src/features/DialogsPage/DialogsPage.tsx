@@ -36,6 +36,9 @@ export const DialogsPage = () => {
 const Container = styled.div`
   display: flex;
   width: 100%;
+  height: 87vh;
+  border-radius: 10px;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5);
   background-color: #343434;
   overflow: hidden; /* Добавлено, чтобы предотвратить появление горизонтальной прокрутки */
 

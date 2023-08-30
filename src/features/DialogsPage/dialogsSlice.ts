@@ -43,9 +43,9 @@ const getStartChatting = createAppAsyncThunk('dialogs/startChatting',
     })
 
 const getUserMessages = createAppAsyncThunk('dialogs/getUserMessages',
-    async (userId: number, {rejectWithValue}) => {
+    async ({userId, page = 1, count = 15}: {userId: number, page?: number, count?: number}, {rejectWithValue}) => {
         try {
-            const response = await dialogsApi.getUserMessages(userId)
+            const response = await dialogsApi.getUserMessages(userId, page, count)
             return {messages: response.data}
         } catch (e: any) {
             return rejectWithValue(e.message)

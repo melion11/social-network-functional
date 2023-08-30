@@ -23,7 +23,7 @@ export const MyPosts = () => {
     return (
         <PostsContainer>
             <PostsTitle>Posts</PostsTitle>
-            <AddForm title={'Add post'} onChange={addPostHandler}/>
+            <AddForm title={'Add post'} placeholder={"Write a post..."} onChange={addPostHandler}/>
             <PostListWrapper>
                 {postsElements}
             </PostListWrapper>
