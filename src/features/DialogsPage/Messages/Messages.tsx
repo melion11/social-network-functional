@@ -12,22 +12,21 @@ import Lottie from 'lottie-react';
 import startChatting from '../assets/animation_llwjjbbh.json';
 import {getHoursMinutesDate} from '../../../common/utils/get-hours-minutes-date';
 import {AddForm} from '../../../common/components';
-import {useInView} from 'react-intersection-observer';
-
 
 
 export const Messages = () => {
 
     const messages = useAppSelector(selectMessages)
+    const totalCount = useAppSelector(state => state.dialogsPage.messages.totalCount)
     const authId = useAppSelector(selectAuthId)
     const dispatch = useAppDispatch()
     const {userId} = useParams()
     const location = useLocation()
     const userData = location.state
     const formattedData = getHoursMinutesDate(userData?.lastUserActivityDate)
-    const [currentPage, setCurrentPage] = useState(1)
+    const [pageMessages, setPageMessages] = useState(2);
     const [fetching, setFetching] = useState(false)
-
+    const messagesRef = useRef<HTMLUListElement | null>(null);
 
     const messagesElements = messages.map(message => {
         if (message.senderId === authId) {
@@ -46,93 +45,85 @@ export const Messages = () => {
 
     const getMessages = () => {
         if (userId) {
-            dispatch(dialogsThunks.getUserMessages({userId: +userId, page: currentPage}))
+            dispatch(dialogsThunks.getUserMessages({userId: +userId, page: pageMessages}))
             dispatch(dialogsThunks.getDialogs())
         }
     };
 
-    useEffect(() => {
-        let timerId: number;
-        const startInterval = () => {
-            timerId = +setTimeout(() => {
-                getMessages();
-                startInterval();
-            }, 100000);
-        };
-        startInterval();
-        return () => {
-            dispatch(dialogsActions.resetMessages())
-            clearTimeout(timerId);
-        };
-    }, [userId]);
-
-    const messageContainerRef = useRef<HTMLUListElement | null>(null);
+    // useEffect(() => {
+    //     let timerId: number;
+    //     const startInterval = () => {
+    //         timerId = +setTimeout(() => {
+    //             getMessages();
+    //             startInterval();
+    //         }, 100000);
+    //     };
+    //     startInterval();
+    //     return () => {
+    //         dispatch(dialogsActions.resetMessages())
+    //         clearTimeout(timerId);
+    //     };
+    // }, [userId]);
 
     useEffect(() => {
         if (userId) {
-            dispatch(dialogsThunks.getUserMessages({userId: +userId, page: 1})).then(()=> {
-                if (messageContainerRef.current) {
-                    messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
-                }
-            })
-            return () => {
-                dispatch(dialogsActions.resetMessages())
-            }
+            dispatch(dialogsThunks.getUserMessages({userId: Number(userId), page: 1})).then(() => {
+                if (messagesRef.current) {
+                    messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+                }})
         }
-    }, []);
+        return () => {
+            dispatch(dialogsActions.resetMessages())
+        }
+    }, [])
 
 
 
-    useLayoutEffect(() => {
-        if (messageContainerRef.current) {
-            messageContainerRef.current.addEventListener('scroll', handleScroll);
-            messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight - messageContainerRef.current.scrollTop
-
+    useEffect(() => {
+        if (messagesRef.current) {
+            messagesRef.current.addEventListener('scroll', handleScroll);
+            messagesRef.current.scrollTop = messagesRef.current.scrollHeight - messagesRef.current.scrollTop
         }
 
         return () => {
-            if (messageContainerRef.current) {
-                messageContainerRef.current.removeEventListener('scroll', handleScroll);
+            if (messagesRef.current) {
+                messagesRef.current.removeEventListener('scroll', handleScroll);
             }
+        };
+    }, [messages.length])
+
+    // useLayoutEffect(() => {
+    //
+    //     if (messagesRef.current && messages.length < totalCount) {
+    //         messagesRef.current.addEventListener('scroll', handleScroll);
+    //         messagesRef.current.scrollTop = messagesRef.current.scrollHeight - messagesRef.current.scrollTop
+    //     }
+    //
+    //     return () => {
+    //         if (messagesRef.current) {
+    //             messagesRef.current.removeEventListener('scroll', handleScroll);
+    //         }
+    //
+    //     };
+    //
+    //
+    // }, [])
+
+    useEffect(() => {
+        if (fetching) {
+            setPageMessages(pageMessages + 1);
+            dispatch(dialogsThunks.getUserMessages({userId: Number(userId), page: pageMessages}))
+            setFetching(false);
         }
-    }, [messages]);
 
-    useLayoutEffect(() => {
-        if (messageContainerRef.current) {
-            messageContainerRef.current.addEventListener('scroll', handleScroll);
-            messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight - messageContainerRef.current.scrollTop
-
-        }
-
-        return () => {
-            if (messageContainerRef.current) {
-                messageContainerRef.current.removeEventListener('scroll', handleScroll);
-            }
-        }
-    }, [messages.length]);
-
-
-    useEffect(()=> {
-        if (fetching && userId) {
-            setCurrentPage(currentPage + 1)
-            dispatch(dialogsThunks.getUserMessages({userId: +userId, page: currentPage}))
-            setFetching(false)
-        }
-
-    }, [fetching])
+    }, [fetching]);
 
     const handleScroll = () => {
-        const scrollTop = messageContainerRef.current!.scrollTop;
-        setFetching(true);
-        console.log('123')
-        if (scrollTop === 0  ) {
+        const scrollTop = messagesRef.current!.scrollTop;
+        if (scrollTop === 0) {
             setFetching(true);
         }
-
     };
-
-
-
 
     return (
         <>
@@ -149,7 +140,7 @@ export const Messages = () => {
                         </UserInfo>
                     </DialogHeaderContainer>
                     <MessageContainer>
-                        <MessageList ref={messageContainerRef}>{messagesElements}</MessageList>
+                        <MessageList ref={messagesRef}>{messagesElements}</MessageList>
                     </MessageContainer>
                     <AddForm title={'Send'} placeholder={'Type your message...'} onChange={sendMessageHandler}/>
                 </ParentContainer>
