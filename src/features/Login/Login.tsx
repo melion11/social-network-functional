@@ -67,7 +67,7 @@ export const Login = () => {
             <FormLabel style={{color: 'gray', textAlign: 'center'}}>
                 <p>To log in get registered
                     <Link href={'https://social-network.samuraijs.com/'}
-                       target={'_blank'}> here
+                          target={'_blank'}> here
                     </Link>
                 </p>
                 <p>or use common test account credentials:</p>
@@ -148,7 +148,7 @@ const StyledTextField = styled(TextField)`
   .MuiOutlinedInput-root:hover:not(.Mui-focused) .MuiOutlinedInput-notchedOutline {
     border-color: #ff8f00; /* Цвет рамки при наведении */
   }
-  
+
 `;
 
 const Link = styled.a`
