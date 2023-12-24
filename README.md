@@ -9,7 +9,7 @@ There are several sections in the social network, the first one is 'Profile'. He
 and you can also change yours. There is also a feed of posts that the user can create.
 ![](src/assets/images/readme/mainPage.png)
 
-The dialogue page is reflected below. This page does not work with the API, but all actions are close to the real one
+The dialogue page is reflected below.
 ![](src/assets/images/readme/dialogsPage.png)
 
 More than 24,900 users have already registered on the social network. You can see their entire list in the "Users"
